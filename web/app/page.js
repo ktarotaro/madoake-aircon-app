@@ -74,18 +74,29 @@ export default async function Home() {
           <h2 style={{ fontSize: 14, color: "#666" }}>室内</h2>
           <p>{indoor.temperature}℃ / {indoor.humidity}%</p>
           <p style={{ color: "#888" }}>DI: {indoorDI}</p>
-          <p style={{ fontSize: 11, color: "#aaa" }}>（不快指数：気温と湿度の快適さ）</p>
           <p style={{ color: "#888", marginTop: 8 }}>AH: {indoorAH} g/m³</p>
-          <p style={{ fontSize: 11, color: "#aaa" }}>（絶対湿度：実際の水分量）</p>
         </div>
         <div>
           <h2 style={{ fontSize: 14, color: "#666" }}>屋外（札幌）</h2>
           <p>{outdoor.temperature}℃ / {outdoor.humidity}%</p>
           <p style={{ color: "#888" }}>DI: {outdoorDI}</p>
-          <p style={{ fontSize: 11, color: "#aaa" }}>（不快指数：気温と湿度の快適さ）</p>
           <p style={{ color: "#888", marginTop: 8 }}>AH: {outdoorAH} g/m³</p>
-          <p style={{ fontSize: 11, color: "#aaa" }}>（絶対湿度：実際の水分量）</p>
         </div>
+      </section>
+
+      <hr style={{ margin: "16px 0", borderColor: "#eee" }} />
+
+      <section style={{ fontSize: 12, color: "#666", lineHeight: 1.6 }}>
+        <h3 style={{ fontSize: 13, color: "#333", marginBottom: 8 }}>指標の説明</h3>
+        <p style={{ marginBottom: 6 }}>
+          <strong>DI（不快指数）</strong>：気温と湿度から快適さを判定
+        </p>
+        <p style={{ fontSize: 11, color: "#888", marginLeft: 12, marginBottom: 12 }}>
+          ≤60: 快適 / 60-70: やや暑い / &gt;70: 不快（このアプリは70が判定基準）
+        </p>
+        <p>
+          <strong>AH（絶対湿度）</strong>：実際に空気に含まれている水分量（g/m³）。相対湿度が同じでも気温が低いほど絶対湿度は低くなります。
+        </p>
       </section>
 
       <p style={{ marginTop: 24, fontSize: 12, color: "#999" }}>
