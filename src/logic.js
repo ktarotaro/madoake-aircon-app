@@ -1,9 +1,15 @@
-// 窓開け／エアコン判断ロジック（Handoff-v1.md 3章準拠）
+// 窓開け／エアコン判断ロジック
+//
+// 「夏ロジック／冬ロジック」という季節の決め打ちをせず、室内の実測値（DI・気温・湿度）だけで
+// 「暑い／寒い／快適」を毎回判定する統一ロジック（2026-07-22、Handoff-v1.mdの季節限定ロジックから拡張）。
 
-const COMFORTABLE_DI_THRESHOLD = 70;
-const DEFAULT_ALPHA = 0; // 絶対湿度の許容差分（湿気を持ち込むかの判定閾値）
+export const COMFORTABLE_DI_THRESHOLD = 70; // これを超えると「暑くて不快」
+export const COLD_TEMP_THRESHOLD = 18; // これを下回ると「寒い」（一般的な室内快適温度の下限）
+export const DRY_HUMIDITY_THRESHOLD = 40; // これを下回ると「乾燥」
+export const DEFAULT_ALPHA = 0; // 絶対湿度の許容差分（湿気を持ち込むかの判定閾値）
+export const HEATING_TARGET_TEMP = 20; // 暖房の推奨設定温度（固定値。DIは寒さ側を評価できないため）
 
-// 不快指数（DI）: 体感の快適さを判定する指標
+// 不快指数（DI）: 体感の快適さを判定する指標（暑さ側のみ意味を持つ）
 export function calculateDI(temperature, humidity) {
   return 0.81 * temperature + 0.01 * humidity * (0.99 * temperature - 14.3) + 46.3;
 }
@@ -14,6 +20,11 @@ export function calculateAH(temperature, humidity) {
   const saturationVaporPressure = 6.112 * Math.exp((17.62 * temperature) / (243.12 + temperature));
   const relativeHumidityRatio = humidity / 100;
   return (217 * (saturationVaporPressure * relativeHumidityRatio)) / (273.15 + temperature);
+}
+
+// DI計算式を気温について逆算し、「目標DIちょうどになる気温」を求める（湿度は現在値のまま据え置き）
+export function solveCoolingTargetTemp(humidity, targetDI = COMFORTABLE_DI_THRESHOLD) {
+  return (targetDI - 46.3 + 0.143 * humidity) / (0.81 + 0.0099 * humidity);
 }
 
 /**
@@ -27,6 +38,7 @@ export function decide({ indoor, outdoor, precipitation10m, alpha = DEFAULT_ALPH
   const outdoorDI = calculateDI(outdoor.temperature, outdoor.humidity);
   const indoorAH = calculateAH(indoor.temperature, indoor.humidity);
   const outdoorAH = calculateAH(outdoor.temperature, outdoor.humidity);
+  const isRaining = precipitation10m > 0;
 
   const metrics = {
     indoorDI: round1(indoorDI),
@@ -35,38 +47,61 @@ export function decide({ indoor, outdoor, precipitation10m, alpha = DEFAULT_ALPH
     outdoorAH: round1(outdoorAH),
   };
 
-  if (precipitation10m > 0) {
+  const humidityNote =
+    indoor.humidity < DRY_HUMIDITY_THRESHOLD
+      ? "室内が乾燥気味です。加湿器の使用を検討してください。"
+      : null;
+
+  // 暑くて不快
+  if (indoorDI > COMFORTABLE_DI_THRESHOLD) {
+    const canOpenWindow =
+      !isRaining && outdoor.temperature < indoor.temperature && outdoorAH <= indoorAH + alpha;
+
+    if (canOpenWindow) {
+      return {
+        judgment: "窓を開ける",
+        reason: `外気の方が${round1(indoor.temperature - outdoor.temperature)}℃涼しく、湿気も室内より${outdoorAH <= indoorAH ? "少なめ" : "同程度"}です。`,
+        humidityNote,
+        ...metrics,
+      };
+    }
+
     return {
-      judgment: "エアコン",
-      reason: "雨天のため換気非推奨です。",
+      judgment: "エアコン（冷房）",
+      reason: isRaining ? "雨天のため換気非推奨です。" : "外気を入れると余計蒸し暑くなります。",
+      recommendedTemperature: round1(solveCoolingTargetTemp(indoor.humidity)),
+      humidityNote,
       ...metrics,
     };
   }
 
-  if (indoorDI <= COMFORTABLE_DI_THRESHOLD) {
+  // 寒い
+  if (indoor.temperature < COLD_TEMP_THRESHOLD) {
+    const canOpenWindow = !isRaining && outdoor.temperature > indoor.temperature;
+
+    if (canOpenWindow) {
+      return {
+        judgment: "窓を開ける",
+        reason: `外気の方が${round1(outdoor.temperature - indoor.temperature)}℃暖かいです。`,
+        humidityNote,
+        ...metrics,
+      };
+    }
+
     return {
-      judgment: "どちらでもいい",
-      reason: "室内はすでに快適な状態です。",
+      judgment: "エアコン（暖房）またはストーブ",
+      reason: isRaining ? "雨天かつ室内が冷えています。" : "室内が冷えています。",
+      recommendedTemperature: HEATING_TARGET_TEMP,
+      humidityNote,
       ...metrics,
     };
   }
 
-  const isOutdoorCooler = outdoor.temperature < indoor.temperature;
-  const isOutdoorDrierOrEqual = outdoorAH <= indoorAH + alpha;
-
-  if (isOutdoorCooler && isOutdoorDrierOrEqual) {
-    const tempDiff = round1(indoor.temperature - outdoor.temperature);
-    const ahDiff = round1(indoorAH - outdoorAH);
-    return {
-      judgment: "窓を開ける",
-      reason: `外気の方が${tempDiff}℃涼しく、湿気も室内より${ahDiff >= 0 ? "少なめ" : "多め"}です。`,
-      ...metrics,
-    };
-  }
-
+  // 快適域（湿度だけ乾燥している可能性はhumidityNoteで補足）
   return {
-    judgment: "エアコン",
-    reason: "外気を入れると余計蒸し暑くなります。",
+    judgment: "どちらでもいい",
+    reason: "室内はすでに快適な状態です。",
+    humidityNote,
     ...metrics,
   };
 }

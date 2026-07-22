@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "list-devices": "node scripts/list-devices.js",
-    "poll": "node scripts/poll.js"
+    "poll": "node scripts/poll.js",
+    "test": "node --test"
   },
   "license": "UNLICENSED",
   "private": true
