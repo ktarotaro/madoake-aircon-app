@@ -13,6 +13,7 @@ final class AppViewModel: ObservableObject {
     private var refreshTimer: Timer?
 
     init() {
+        NotificationService.requestAuthorization()
         if let savedPassword = KeychainHelper.loadPassword() {
             Task { await login(password: savedPassword, save: false) }
         }
@@ -60,7 +61,10 @@ final class AppViewModel: ObservableObject {
         defer { isLoading = false }
 
         do {
-            latest = try await api.fetchLatest()
+            let previousJudgment = latest?.judgment
+            let newLatest = try await api.fetchLatest()
+            latest = newLatest
+            NotificationService.notifyJudgmentChanged(from: previousJudgment, to: newLatest)
         } catch {
             errorMessage = (error as? VercelAPIError)?.errorDescription ?? error.localizedDescription
         }

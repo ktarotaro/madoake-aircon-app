@@ -3,6 +3,17 @@ import SwiftUI
 struct ContentView: View {
     @EnvironmentObject var viewModel: AppViewModel
     @State private var pendingAction: PendingAction?
+    @State private var launchAtLogin: Bool = LoginItemService.isEnabled
+
+    private var launchAtLoginBinding: Binding<Bool> {
+        Binding(
+            get: { launchAtLogin },
+            set: { newValue in
+                launchAtLogin = newValue
+                LoginItemService.setEnabled(newValue)
+            }
+        )
+    }
 
     enum PendingAction: Identifiable {
         case on
@@ -125,6 +136,10 @@ struct ContentView: View {
                 Text("最終更新: \(formattedDate(latest.updatedAtDate))")
                     .font(.caption2)
                     .foregroundColor(.secondary)
+
+                Toggle("ログイン時に自動起動", isOn: launchAtLoginBinding)
+                    .font(.caption)
+                    .toggleStyle(.switch)
 
                 HStack {
                     Button("再読み込み") { Task { await viewModel.refresh() } }
