@@ -41,26 +41,32 @@ struct ContentView: View {
                 .frame(width: 320)
             }
         }
-        .confirmationDialog(
-            confirmationTitle,
-            isPresented: Binding(
-                get: { pendingAction != nil },
-                set: { if !$0 { pendingAction = nil } }
-            ),
-            titleVisibility: .visible
-        ) {
-            Button("実行する", role: .destructive) {
-                if let action = pendingAction {
-                    Task { await viewModel.executeAc(action: action == .on ? "on" : "off") }
+    }
+
+    // MenuBarExtra(.window)内では.confirmationDialog/.alertが正しく閉じないことがあるため、
+    // システムのモーダルではなく画面内に直接確認UIを表示する方式にしている。
+    @ViewBuilder
+    private func confirmationRow(_ latest: LatestData) -> some View {
+        if let action = pendingAction {
+            VStack(alignment: .leading, spacing: 6) {
+                Text(confirmationTitle(action, latest))
+                    .font(.caption)
+                    .bold()
+                HStack(spacing: 8) {
+                    Button("実行する") {
+                        Task { await viewModel.executeAc(action: action == .on ? "on" : "off") }
+                        pendingAction = nil
+                    }
+                    Button("キャンセル") { pendingAction = nil }
                 }
-                pendingAction = nil
             }
-            Button("キャンセル", role: .cancel) { pendingAction = nil }
+            .padding(8)
+            .background(Color.gray.opacity(0.15))
+            .cornerRadius(6)
         }
     }
 
-    private var confirmationTitle: String {
-        guard let action = pendingAction, let latest = viewModel.latest else { return "" }
+    private func confirmationTitle(_ action: PendingAction, _ latest: LatestData) -> String {
         if action == .off {
             return "エアコンをOFFにします。よろしいですか？"
         }
@@ -102,7 +108,9 @@ struct ContentView: View {
                     }
                     Button("エアコンをOFFにする") { pendingAction = .off }
                 }
-                .disabled(viewModel.isLoading)
+                .disabled(viewModel.isLoading || pendingAction != nil)
+
+                confirmationRow(latest)
 
                 if let result = viewModel.actionResultMessage {
                     Text(result).font(.caption).foregroundColor(.green)
