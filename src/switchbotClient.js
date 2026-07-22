@@ -33,3 +33,37 @@ export async function getMeterStatus({ token, secret, deviceId }) {
     humidity: body.body.humidity,
   };
 }
+
+export const AC_MODE = { AUTO: 1, COOL: 2, DRY: 3, FAN: 4, HEAT: 5 };
+export const AC_FAN_SPEED = { AUTO: 1, LOW: 2, MEDIUM: 3, HIGH: 4 };
+
+// 赤外線リモコン（エアコン）に setAll コマンドを送信する。
+// 呼び出しは必ずユーザーの明示的な確認操作を経てから行うこと（自動cronからは呼ばない）。
+export async function sendAcCommand({
+  token,
+  secret,
+  deviceId,
+  temperature,
+  mode = AC_MODE.COOL,
+  fanSpeed = AC_FAN_SPEED.AUTO,
+  power = "on",
+}) {
+  const parameter = `${Math.round(temperature)},${mode},${fanSpeed},${power}`;
+
+  const res = await fetch(`${API_BASE}/devices/${deviceId}/commands`, {
+    method: "POST",
+    headers: buildAuthHeaders(token, secret),
+    body: JSON.stringify({
+      command: "setAll",
+      parameter,
+      commandType: "command",
+    }),
+  });
+  const body = await res.json();
+
+  if (body.statusCode !== 100) {
+    throw new Error(`SwitchBot APIエラー（エアコン操作）: ${JSON.stringify(body)}`);
+  }
+
+  return body;
+}

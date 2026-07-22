@@ -6,6 +6,7 @@
   "scripts": {
     "list-devices": "node scripts/list-devices.js",
     "poll": "node scripts/poll.js",
+    "apply-ac": "node scripts/apply-ac.js",
     "test": "node --test"
   },
   "license": "UNLICENSED",
