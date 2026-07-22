@@ -1,0 +1,12 @@
+{
+  "name": "madoake-aircon-app",
+  "version": "1.0.0",
+  "description": "SwitchBot温湿度計と気象庁APIから「窓を開ける／エアコン／どちらでもいい」を自動判断するアプリ",
+  "type": "module",
+  "scripts": {
+    "list-devices": "node scripts/list-devices.js",
+    "poll": "node scripts/poll.js"
+  },
+  "license": "UNLICENSED",
+  "private": true
+}
