@@ -1,0 +1,11 @@
+{
+  "sentAt": "2026-07-22T13:55:22.385Z",
+  "power": "off",
+  "temperature": null,
+  "mode": null,
+  "modeLabel": "OFF",
+  "basedOnJudgment": null,
+  "indoorTemperatureAtCommand": null,
+  "note": "赤外線リモコン経由のため、エアコンが実際にこの通り反応したかはAPIでは確認できません。目視で確認してください。",
+  "triggeredFrom": "web"
+}
