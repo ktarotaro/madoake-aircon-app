@@ -100,7 +100,7 @@ struct ContentView: View {
                         Button("この設定で実行する") { pendingAction = .on }
                             .buttonStyle(.borderedProminent)
                     }
-                    Button("OFFにする") { pendingAction = .off }
+                    Button("エアコンをOFFにする") { pendingAction = .off }
                 }
                 .disabled(viewModel.isLoading)
 
