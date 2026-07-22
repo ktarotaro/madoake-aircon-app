@@ -38,6 +38,8 @@ export default async function Home() {
     outdoor,
     indoorDI,
     outdoorDI,
+    indoorAH,
+    outdoorAH,
     updatedAt,
     acFeedback,
   } = latest;
@@ -72,11 +74,13 @@ export default async function Home() {
           <h2 style={{ fontSize: 14, color: "#666" }}>室内</h2>
           <p>{indoor.temperature}℃ / {indoor.humidity}%</p>
           <p style={{ color: "#888" }}>DI: {indoorDI}</p>
+          <p style={{ color: "#888" }}>AH: {indoorAH} g/m³</p>
         </div>
         <div>
           <h2 style={{ fontSize: 14, color: "#666" }}>屋外（札幌）</h2>
           <p>{outdoor.temperature}℃ / {outdoor.humidity}%</p>
           <p style={{ color: "#888" }}>DI: {outdoorDI}</p>
+          <p style={{ color: "#888" }}>AH: {outdoorAH} g/m³</p>
         </div>
       </section>
 
