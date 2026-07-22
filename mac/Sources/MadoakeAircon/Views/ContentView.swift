@@ -1,0 +1,167 @@
+import SwiftUI
+
+struct ContentView: View {
+    @EnvironmentObject var viewModel: AppViewModel
+    @State private var pendingAction: PendingAction?
+
+    enum PendingAction: Identifiable {
+        case on
+        case off
+        var id: String { self == .on ? "on" : "off" }
+    }
+
+    var body: some View {
+        Group {
+            if !viewModel.isLoggedIn {
+                LoginView()
+            } else if let latest = viewModel.latest {
+                dashboard(latest)
+            } else if viewModel.isLoading {
+                ProgressView("読み込み中…")
+                    .padding(24)
+                    .frame(width: 320)
+            } else {
+                VStack(spacing: 8) {
+                    Text(viewModel.errorMessage ?? "データがありません")
+                        .font(.caption)
+                    Button("再読み込み") { Task { await viewModel.refresh() } }
+                }
+                .padding(16)
+                .frame(width: 320)
+            }
+        }
+        .confirmationDialog(
+            confirmationTitle,
+            isPresented: Binding(
+                get: { pendingAction != nil },
+                set: { if !$0 { pendingAction = nil } }
+            ),
+            titleVisibility: .visible
+        ) {
+            Button("実行する", role: .destructive) {
+                if let action = pendingAction {
+                    Task { await viewModel.executeAc(action: action == .on ? "on" : "off") }
+                }
+                pendingAction = nil
+            }
+            Button("キャンセル", role: .cancel) { pendingAction = nil }
+        }
+    }
+
+    private var confirmationTitle: String {
+        guard let action = pendingAction, let latest = viewModel.latest else { return "" }
+        if action == .off {
+            return "エアコンをOFFにします。よろしいですか？"
+        }
+        let temp = latest.recommendedTemperature.map { "\($0)℃" } ?? ""
+        return "\(latest.modeLabel ?? "")・\(temp) でエアコンを操作します。よろしいですか？"
+    }
+
+    @ViewBuilder
+    private func dashboard(_ latest: LatestData) -> some View {
+        ScrollView {
+            VStack(alignment: .leading, spacing: 10) {
+                Text("窓開け／エアコン判断アプリ")
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+
+                Text(latest.judgment)
+                    .font(.system(size: 24, weight: .bold))
+
+                Text(latest.reason)
+                    .font(.callout)
+                    .foregroundColor(.secondary)
+
+                if let temp = latest.recommendedTemperature {
+                    Text("推奨設定温度: \(temp, specifier: "%.1f")℃")
+                        .font(.callout)
+                        .bold()
+                }
+
+                if let note = latest.humidityNote {
+                    Text("⚠ \(note)")
+                        .font(.caption)
+                        .foregroundColor(.orange)
+                }
+
+                HStack(spacing: 8) {
+                    if latest.isAcExecutable {
+                        Button("この設定で実行する") { pendingAction = .on }
+                            .buttonStyle(.borderedProminent)
+                    }
+                    Button("OFFにする") { pendingAction = .off }
+                }
+                .disabled(viewModel.isLoading)
+
+                if let result = viewModel.actionResultMessage {
+                    Text(result).font(.caption).foregroundColor(.green)
+                }
+                if let error = viewModel.errorMessage {
+                    Text(error).font(.caption).foregroundColor(.red)
+                }
+                if let feedback = latest.acFeedback {
+                    Text(feedback.message)
+                        .font(.caption)
+                        .foregroundColor(feedbackColor(feedback.status))
+                }
+
+                Divider()
+
+                HStack(alignment: .top, spacing: 20) {
+                    readingColumn(title: "室内", reading: latest.indoor.temperature, humidity: latest.indoor.humidity, di: latest.indoorDI, ah: latest.indoorAH)
+                    readingColumn(title: "屋外（札幌）", reading: latest.outdoor.temperature, humidity: latest.outdoor.humidity, di: latest.outdoorDI, ah: latest.outdoorAH)
+                }
+
+                Divider()
+
+                VStack(alignment: .leading, spacing: 4) {
+                    Text("指標の説明").font(.caption).bold()
+                    Text("DI（不快指数）：≤60 快適 / 60-70 やや暑い / >70 不快（判定基準）")
+                        .font(.caption2).foregroundColor(.secondary)
+                    Text("AH（絶対湿度）：実際の水分量(g/m³)。気温が低いほど同じ相対湿度でも値は小さくなる")
+                        .font(.caption2).foregroundColor(.secondary)
+                }
+
+                Text("最終更新: \(formattedDate(latest.updatedAtDate))")
+                    .font(.caption2)
+                    .foregroundColor(.secondary)
+
+                HStack {
+                    Button("再読み込み") { Task { await viewModel.refresh() } }
+                        .font(.caption)
+                    Spacer()
+                    Button("ログアウト") { viewModel.logout() }
+                        .font(.caption)
+                }
+            }
+            .padding(16)
+        }
+        .frame(width: 340, height: 480)
+    }
+
+    private func readingColumn(title: String, reading: Double, humidity: Double, di: Double, ah: Double) -> some View {
+        VStack(alignment: .leading, spacing: 2) {
+            Text(title).font(.caption).foregroundColor(.secondary)
+            Text("\(reading, specifier: "%.1f")℃ / \(humidity, specifier: "%.0f")%")
+                .font(.callout)
+            Text("DI: \(di, specifier: "%.1f")").font(.caption2).foregroundColor(.secondary)
+            Text("AH: \(ah, specifier: "%.1f") g/m³").font(.caption2).foregroundColor(.secondary)
+        }
+    }
+
+    private func feedbackColor(_ status: String) -> Color {
+        switch status {
+        case "ok": return .green
+        case "warning": return .orange
+        default: return .secondary
+        }
+    }
+
+    private func formattedDate(_ date: Date?) -> String {
+        guard let date else { return "-" }
+        let formatter = DateFormatter()
+        formatter.locale = Locale(identifier: "ja_JP")
+        formatter.dateFormat = "yyyy/M/d HH:mm:ss"
+        return formatter.string(from: date)
+    }
+}
