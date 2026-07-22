@@ -37,6 +37,10 @@ export async function getMeterStatus({ token, secret, deviceId }) {
 export const AC_MODE = { AUTO: 1, COOL: 2, DRY: 3, FAN: 4, HEAT: 5 };
 export const AC_FAN_SPEED = { AUTO: 1, LOW: 2, MEDIUM: 3, HIGH: 4 };
 
+// 安全設定（本人の明示的な指示、2026-07-22）：暖房・自動モードでは絶対にエアコンを操作しない。
+// 呼び出し元のミスがあっても物理的に防げるよう、ここで最終ガードをかける。
+const ALLOWED_AC_MODES = new Set([AC_MODE.COOL, AC_MODE.DRY]);
+
 // 赤外線リモコン（エアコン）に setAll コマンドを送信する。
 // 呼び出しは必ずユーザーの明示的な確認操作を経てから行うこと（自動cronからは呼ばない）。
 export async function sendAcCommand({
@@ -48,6 +52,12 @@ export async function sendAcCommand({
   fanSpeed = AC_FAN_SPEED.AUTO,
   power = "on",
 }) {
+  if (power === "on" && !ALLOWED_AC_MODES.has(mode)) {
+    throw new Error(
+      `安全設定により、このモード（mode=${mode}）でのエアコン操作は許可されていません。冷房(${AC_MODE.COOL})または除湿(${AC_MODE.DRY})のみ使用できます。`
+    );
+  }
+
   const parameter = `${Math.round(temperature)},${mode},${fanSpeed},${power}`;
 
   const res = await fetch(`${API_BASE}/devices/${deviceId}/commands`, {

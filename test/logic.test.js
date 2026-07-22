@@ -21,6 +21,16 @@ test("暑い・屋外の方が湿っている → エアコン（冷房）と推
   assert.ok(result.recommendedTemperature > 0);
 });
 
+test("暑い・湿度が非常に高い → エアコン（除湿）", () => {
+  const result = decide({
+    indoor: { temperature: 28, humidity: 75 },
+    outdoor: { temperature: 27, humidity: 80 },
+    precipitation10m: 0,
+  });
+  assert.equal(result.judgment, "エアコン（除湿）");
+  assert.match(result.reason, /湿気/);
+});
+
 test("雨天 → 暑くても窓を開けない", () => {
   const result = decide({
     indoor: { temperature: 30, humidity: 60 },

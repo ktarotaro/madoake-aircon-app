@@ -1,7 +1,8 @@
-import { mkdir, writeFile } from "node:fs/promises";
+import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { getMeterStatus } from "../src/switchbotClient.js";
 import { getAmedasStatus } from "../src/weatherClient.js";
 import { decide } from "../src/logic.js";
+import { evaluateAcFeedback } from "../src/acFeedback.js";
 import { config } from "../src/config.js";
 
 const token = process.env.SWITCHBOT_TOKEN;
@@ -24,11 +25,21 @@ const result = decide({
   alpha: config.alpha,
 });
 
+let commandRecord = null;
+try {
+  commandRecord = JSON.parse(await readFile("data/ac-last-command.json", "utf8"));
+} catch {
+  // まだ一度もエアコンを操作していない場合はファイルが存在しない。無視してよい。
+}
+
+const acFeedback = evaluateAcFeedback({ commandRecord, currentIndoorTemperature: indoor.temperature });
+
 const output = {
   updatedAt: new Date().toISOString(),
   indoor,
   outdoor: { ...outdoor, observedAt: outdoorRaw.observedAt },
   ...result,
+  acFeedback,
 };
 
 await mkdir("data", { recursive: true });

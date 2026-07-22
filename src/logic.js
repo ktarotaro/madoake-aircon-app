@@ -6,6 +6,7 @@
 export const COMFORTABLE_DI_THRESHOLD = 70; // これを超えると「暑くて不快」
 export const COLD_TEMP_THRESHOLD = 18; // これを下回ると「寒い」（一般的な室内快適温度の下限）
 export const DRY_HUMIDITY_THRESHOLD = 40; // これを下回ると「乾燥」
+export const HIGH_HUMIDITY_THRESHOLD = 65; // 暑い判定の中でも、これ以上の湿度なら冷房より除湿を優先
 export const DEFAULT_ALPHA = 0; // 絶対湿度の許容差分（湿気を持ち込むかの判定閾値）
 export const HEATING_TARGET_TEMP = 20; // 暖房の推奨設定温度（固定値。DIは寒さ側を評価できないため）
 
@@ -66,9 +67,15 @@ export function decide({ indoor, outdoor, precipitation10m, alpha = DEFAULT_ALPH
       };
     }
 
+    const isHumidityDriven = indoor.humidity >= HIGH_HUMIDITY_THRESHOLD;
+
     return {
-      judgment: "エアコン（冷房）",
-      reason: isRaining ? "雨天のため換気非推奨です。" : "外気を入れると余計蒸し暑くなります。",
+      judgment: isHumidityDriven ? "エアコン（除湿）" : "エアコン（冷房）",
+      reason: isRaining
+        ? "雨天のため換気非推奨です。"
+        : isHumidityDriven
+          ? "気温よりも湿気が原因の不快感のため、除湿が有効です。"
+          : "外気を入れると余計蒸し暑くなります。",
       recommendedTemperature: round1(solveCoolingTargetTemp(indoor.humidity)),
       humidityNote,
       ...metrics,

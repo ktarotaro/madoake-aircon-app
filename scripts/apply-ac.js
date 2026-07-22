@@ -31,19 +31,26 @@ if (isOff) {
     mode: null,
     modeLabel: "OFF",
     basedOnJudgment: null,
+    indoorTemperatureAtCommand: null,
   };
 } else {
   const latest = JSON.parse(await readFile("data/latest.json", "utf8"));
 
+  // 安全設定：暖房・自動モードは対象外（本人の明示的な指示、2026-07-22）。
+  // 「エアコン（暖房）またはストーブ」判定の場合は自動操作せず、手動対応を促すのみ。
   const judgmentToMode = {
     "エアコン（冷房）": { mode: AC_MODE.COOL, label: "冷房" },
-    "エアコン（暖房）またはストーブ": { mode: AC_MODE.HEAT, label: "暖房" },
+    "エアコン（除湿）": { mode: AC_MODE.DRY, label: "除湿" },
   };
 
   const matched = judgmentToMode[latest.judgment];
 
   if (!matched) {
-    console.log(`現在の判定は「${latest.judgment}」のため、エアコン操作の対象外です。何もしません。`);
+    if (latest.judgment === "エアコン（暖房）またはストーブ") {
+      console.log("現在の判定は「エアコン（暖房）またはストーブ」ですが、安全設定によりエアコンの暖房・自動運転は自動操作しません。ストーブ等で手動対応してください。");
+    } else {
+      console.log(`現在の判定は「${latest.judgment}」のため、エアコン操作の対象外です。何もしません。`);
+    }
     process.exit(0);
   }
 
@@ -53,6 +60,7 @@ if (isOff) {
     mode: matched.mode,
     modeLabel: matched.label,
     basedOnJudgment: { judgment: latest.judgment, reason: latest.reason, updatedAt: latest.updatedAt },
+    indoorTemperatureAtCommand: latest.indoor.temperature,
   };
 }
 
