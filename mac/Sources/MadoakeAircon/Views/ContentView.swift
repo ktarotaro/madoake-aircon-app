@@ -105,7 +105,7 @@ struct ContentView: View {
                 if let note = latest.humidityNote {
                     Text("⚠ \(note)")
                         .font(.caption)
-                        .foregroundColor(.orange)
+                        .foregroundColor(Self.warningColor)
                 }
 
                 HStack(spacing: 8) {
@@ -120,23 +120,21 @@ struct ContentView: View {
                 confirmationRow(latest)
 
                 if let result = viewModel.actionResultMessage {
-                    Text(result).font(.caption).foregroundColor(.green)
+                    Text(result).font(.caption).foregroundColor(Self.successColor)
                 }
                 if let error = viewModel.errorMessage {
-                    Text(error).font(.caption).foregroundColor(.red)
+                    Text(error).font(.caption).foregroundColor(Self.errorColor)
                 }
                 if let feedback = latest.acFeedback {
                     Text(feedback.message)
                         .font(.caption)
-                        .bold()
                         .foregroundColor(feedbackColor(feedback.status))
                 }
 
                 if let warning = latest.overcoolingWarning {
                     Text("❄️ \(warning)")
                         .font(.caption)
-                        .bold()
-                        .foregroundColor(.blue)
+                        .foregroundColor(Self.infoColor)
                 }
 
                 Divider()
@@ -175,6 +173,11 @@ struct ContentView: View {
             .padding(16)
         }
         .frame(width: 340, height: 480)
+        // メニューバーポップオーバー標準の半透明背景だと、その上に乗る文字色の
+        // コントラスト比を保証できない（壁紙により実効背景色が変わるため）。
+        // 不透明な白に固定することで、下記の文字色が確実に4.5:1以上になるようにしている
+        // （2026-07-23、本人の指摘を受けて変更）。
+        .background(Color.white)
     }
 
     private func readingColumn(title: String, reading: Double, humidity: Double, di: Double, ah: Double) -> some View {
@@ -187,12 +190,20 @@ struct ContentView: View {
         }
     }
 
-    // 標準の.green/.orangeはメニューバーポップオーバーの半透明背景で視認性が低いため、
-    // Web版と同じ濃い色（#16a34a等）を明示的に指定する（2026-07-23、本人からの指摘で修正）
+    // 背景（白、Color.white）に対してコントラスト比4.5:1以上（WCAG AA）になるよう、
+    // 標準のColor.green/.orange/.red/.blueより明度を落とした色を明示的に指定している。
+    // 太字は視認性改善の効果が薄いため使わず、色のコントラストだけで対応する
+    // （2026-07-23、本人の指摘を受けて変更。各色の対白コントラスト比：緑7.1:1、
+    // 橙7.1:1、赤6.5:1、青5.2:1）。
+    static let successColor = Color(red: 0x16 / 255, green: 0x65 / 255, blue: 0x34 / 255) // #166534
+    static let warningColor = Color(red: 0x92 / 255, green: 0x40 / 255, blue: 0x0e / 255) // #92400E
+    static let errorColor = Color(red: 0xb9 / 255, green: 0x1c / 255, blue: 0x1c / 255) // #B91C1C
+    static let infoColor = Color(red: 0x25 / 255, green: 0x63 / 255, blue: 0xeb / 255) // #2563EB
+
     private func feedbackColor(_ status: String) -> Color {
         switch status {
-        case "ok": return Color(red: 0x16 / 255, green: 0xa3 / 255, blue: 0x4a / 255)
-        case "warning": return Color(red: 0xd9 / 255, green: 0x77 / 255, blue: 0x06 / 255)
+        case "ok": return Self.successColor
+        case "warning": return Self.warningColor
         default: return .secondary
         }
     }
