@@ -1,17 +1,13 @@
 {
-  "sentAt": "2026-07-23T04:29:48.246Z",
-  "power": "on",
-  "temperature": 27,
-  "mode": 2,
-  "modeLabel": "冷房",
-  "fanSpeed": 1,
-  "fanSpeedLabel": "自動",
-  "basedOnJudgment": {
-    "judgment": "エアコン（冷房）",
-    "reason": "外気を入れると余計蒸し暑くなります。",
-    "updatedAt": "2026-07-23T04:20:42.917Z"
-  },
-  "indoorTemperatureAtCommand": 28.1,
+  "sentAt": "2026-07-23T07:33:03.806Z",
+  "power": "off",
+  "temperature": null,
+  "mode": null,
+  "modeLabel": "OFF",
+  "fanSpeed": null,
+  "fanSpeedLabel": null,
+  "basedOnJudgment": null,
+  "indoorTemperatureAtCommand": null,
   "note": "赤外線リモコン経由のため、エアコンが実際にこの通り反応したかはAPIでは確認できません。目視で確認してください。",
   "triggeredFrom": "web"
 }
