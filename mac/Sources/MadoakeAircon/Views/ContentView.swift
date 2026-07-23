@@ -104,7 +104,7 @@ struct ContentView: View {
                 if let note = latest.humidityNote {
                     Text("⚠ \(note)")
                         .font(.caption)
-                        .foregroundColor(.orange)
+                        .foregroundColor(SystemStatusColor.warning)
                 }
 
                 HStack(spacing: 8) {
@@ -119,10 +119,10 @@ struct ContentView: View {
                 confirmationRow(latest)
 
                 if let result = viewModel.actionResultMessage {
-                    Text(result).font(.caption).foregroundColor(.green)
+                    Text(result).font(.caption).foregroundColor(SystemStatusColor.success)
                 }
                 if let error = viewModel.errorMessage {
-                    Text(error).font(.caption).foregroundColor(.red)
+                    Text(error).font(.caption).foregroundColor(SystemStatusColor.error)
                 }
                 if let feedback = latest.acFeedback {
                     Text(feedback.message)
@@ -133,7 +133,7 @@ struct ContentView: View {
                 if let warning = latest.overcoolingWarning {
                     Text("❄️ \(warning)")
                         .font(.caption)
-                        .foregroundColor(.blue)
+                        .foregroundColor(SystemStatusColor.info)
                 }
 
                 Divider()
@@ -184,12 +184,10 @@ struct ContentView: View {
         }
     }
 
-    // Appleのシステムカラー（Color.green/.orange等）をそのまま使う方針
-    // （2026-07-23、コントラスト比よりシステムカラーを優先する本人の判断による）。
     private func feedbackColor(_ status: String) -> Color {
         switch status {
-        case "ok": return .green
-        case "warning": return .orange
+        case "ok": return SystemStatusColor.success
+        case "warning": return SystemStatusColor.warning
         default: return .secondary
         }
     }

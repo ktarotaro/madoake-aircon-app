@@ -18,7 +18,7 @@ struct LoginView: View {
 
             if let error = viewModel.errorMessage {
                 Text(error)
-                    .foregroundColor(.red)
+                    .foregroundColor(SystemStatusColor.error)
                     .font(.caption)
             }
         }
