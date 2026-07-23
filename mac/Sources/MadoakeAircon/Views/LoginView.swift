@@ -24,6 +24,7 @@ struct LoginView: View {
         }
         .padding(16)
         .frame(width: 280)
+        .background(Color.white)
     }
 
     private func submit() {

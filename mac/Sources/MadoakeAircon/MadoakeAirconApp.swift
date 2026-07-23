@@ -8,6 +8,9 @@ struct MadoakeAirconApp: App {
         MenuBarExtra(menuBarTitle, systemImage: menuBarIcon) {
             ContentView()
                 .environmentObject(viewModel)
+                // 背景を白に固定しているため、ダークモード時に.primary/.secondary等が
+                // 白文字化して見えなくなるのを防ぐ（2026-07-23）。
+                .preferredColorScheme(.light)
         }
         .menuBarExtraStyle(.window)
     }

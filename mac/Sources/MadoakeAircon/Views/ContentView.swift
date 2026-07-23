@@ -31,6 +31,7 @@ struct ContentView: View {
                 ProgressView("読み込み中…")
                     .padding(24)
                     .frame(width: 320)
+                    .background(Color.white)
             } else {
                 VStack(spacing: 8) {
                     Text(viewModel.errorMessage ?? "データがありません")
@@ -39,6 +40,7 @@ struct ContentView: View {
                 }
                 .padding(16)
                 .frame(width: 320)
+                .background(Color.white)
             }
         }
     }
@@ -172,6 +174,9 @@ struct ContentView: View {
             .padding(16)
         }
         .frame(width: 340, height: 480)
+        // ポップオーバー標準の半透明・ぼかし背景（壁紙が透けてグラデーションのように
+        // 見える）ではなく、単色の薄い背景にする（2026-07-23、本人の指摘）。
+        .background(Color.white)
     }
 
     private func readingColumn(title: String, reading: Double, humidity: Double, di: Double, ah: Double) -> some View {
