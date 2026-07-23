@@ -1,6 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import { accessibleColors } from "../lib/accessibleColors";
 
 export default function LogoutButton() {
   const router = useRouter();
@@ -14,7 +15,7 @@ export default function LogoutButton() {
   return (
     <button
       onClick={handleLogout}
-      style={{ fontSize: 12, color: "#888", background: "none", border: "none", cursor: "pointer", padding: 0 }}
+      style={{ fontSize: 12, color: accessibleColors.secondary, background: "none", border: "none", cursor: "pointer", padding: 0 }}
     >
       ログアウト
     </button>

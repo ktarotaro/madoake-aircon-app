@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { accessibleColors } from "../lib/accessibleColors";
 
 const VAPID_PUBLIC_KEY = "BCDUC3YlJuRhKg59YNauawqODaDhhh2bmLEwDML7QBArCZ8ejskkoE7Kc-rDFeRD_YJ9TdiVUfObQmNH8M6oohY";
 
@@ -92,7 +93,7 @@ export default function NotificationSubscribeButton() {
       >
         {subscribed ? "通知をOFFにする" : "通知をONにする"}
       </button>
-      {error && <p style={{ fontSize: 11, color: "crimson" }}>{error}</p>}
+      {error && <p style={{ fontSize: 11, color: accessibleColors.error }}>{error}</p>}
     </div>
   );
 }

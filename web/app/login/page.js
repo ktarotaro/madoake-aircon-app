@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { accessibleColors } from "../../lib/accessibleColors";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -49,7 +50,7 @@ export default function LoginPage() {
         >
           {loading ? "確認中…" : "ログイン"}
         </button>
-        {error && <p style={{ color: "crimson", marginTop: 8 }}>{error}</p>}
+        {error && <p style={{ color: accessibleColors.error, marginTop: 8 }}>{error}</p>}
       </form>
     </main>
   );

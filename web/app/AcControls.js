@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { accessibleColors } from "../lib/accessibleColors";
 
 const AC_JUDGMENTS = ["エアコン（冷房）", "エアコン（除湿）"];
 
@@ -59,8 +60,8 @@ export default function AcControls({ judgment, recommendedTemperature, recommend
       </button>
 
       {status === "loading" && <p>送信中…</p>}
-      {status?.ok && <p style={{ color: "green" }}>送信しました。実際に反応しているか目視で確認してください。</p>}
-      {status?.error && <p style={{ color: "crimson" }}>エラー: {status.error}</p>}
+      {status?.ok && <p style={{ color: accessibleColors.success }}>送信しました。実際に反応しているか目視で確認してください。</p>}
+      {status?.error && <p style={{ color: accessibleColors.error }}>エラー: {status.error}</p>}
     </div>
   );
 }
