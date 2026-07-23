@@ -22,6 +22,12 @@ enum NotificationService {
         }
     }
 
+    // 冷えすぎ警告（overcoolingWarning）が新たに出たときのみ通知する（解消時は通知しない。Web版と同じ非対称設計）
+    static func notifyOvercoolingChanged(from previous: String?, to current: LatestData) {
+        guard previous != current.overcoolingWarning, let warning = current.overcoolingWarning else { return }
+        send(title: "冷えすぎ注意", body: warning)
+    }
+
     private static func send(title: String, body: String) {
         let content = UNMutableNotificationContent()
         content.title = title

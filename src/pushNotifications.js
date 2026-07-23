@@ -45,5 +45,11 @@ export function buildNotificationMessages(previous, current) {
     }
   }
 
+  const previousOvercooling = previous?.overcoolingWarning ?? null;
+  const currentOvercooling = current.overcoolingWarning ?? null;
+  if (previousOvercooling !== currentOvercooling && currentOvercooling) {
+    messages.push({ title: "冷えすぎ注意", body: currentOvercooling });
+  }
+
   return messages;
 }

@@ -131,6 +131,13 @@ struct ContentView: View {
                         .foregroundColor(feedbackColor(feedback.status))
                 }
 
+                if let warning = latest.overcoolingWarning {
+                    Text("❄️ \(warning)")
+                        .font(.caption)
+                        .bold()
+                        .foregroundColor(.blue)
+                }
+
                 Divider()
 
                 HStack(alignment: .top, spacing: 20) {

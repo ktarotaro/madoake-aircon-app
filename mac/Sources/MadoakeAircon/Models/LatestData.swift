@@ -14,6 +14,7 @@ struct LatestData: Codable {
     let indoorAH: Double
     let outdoorAH: Double
     let acFeedback: AcFeedback?
+    let overcoolingWarning: String?
 
     struct Reading: Codable {
         let temperature: Double

@@ -43,3 +43,17 @@ test("判定・乾燥注意の両方が変わった → 通知2件", () => {
   const messages = buildNotificationMessages(previous, current);
   assert.equal(messages.length, 2);
 });
+
+test("冷えすぎ警告が新たに出た → 通知1件", () => {
+  const previous = { judgment: "エアコン（冷房）", humidityNote: null, overcoolingWarning: null };
+  const current = { judgment: "エアコン（冷房）", reason: "冷房中", humidityNote: null, overcoolingWarning: "室温が目標より下がりすぎています。" };
+  const messages = buildNotificationMessages(previous, current);
+  assert.equal(messages.length, 1);
+  assert.equal(messages[0].title, "冷えすぎ注意");
+});
+
+test("冷えすぎ警告が続いている（変化なし） → 通知なし", () => {
+  const previous = { judgment: "エアコン（冷房）", humidityNote: null, overcoolingWarning: "室温が目標より下がりすぎています。" };
+  const current = { judgment: "エアコン（冷房）", reason: "冷房中", humidityNote: null, overcoolingWarning: "室温が目標より下がりすぎています。" };
+  assert.deepEqual(buildNotificationMessages(previous, current), []);
+});

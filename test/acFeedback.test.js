@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { evaluateAcFeedback } from "../src/acFeedback.js";
+import { evaluateAcFeedback, evaluateOvercooling } from "../src/acFeedback.js";
 
 const baseCommand = {
   power: "on",
@@ -54,6 +54,57 @@ test("送信から2時間後 → 古すぎるので null", () => {
     commandRecord: baseCommand,
     currentIndoorTemperature: 25,
     now: new Date("2026-07-22T12:00:00.000Z"),
+  });
+  assert.equal(result, null);
+});
+
+const coolingCommand = { power: "on", mode: 2, modeLabel: "冷房", sentAt: "2026-07-22T10:00:00.000Z", temperature: 23 };
+
+test("冷えすぎ: コマンド記録がない → null", () => {
+  assert.equal(evaluateOvercooling({ commandRecord: null, currentIndoorTemperature: 20 }), null);
+});
+
+test("冷えすぎ: 送信から10分後（猶予期間中） → null", () => {
+  const result = evaluateOvercooling({
+    commandRecord: coolingCommand,
+    currentIndoorTemperature: 20,
+    now: new Date("2026-07-22T10:10:00.000Z"),
+  });
+  assert.equal(result, null);
+});
+
+test("冷えすぎ: 目標温度より2℃以上下がっている → 警告", () => {
+  const result = evaluateOvercooling({
+    commandRecord: coolingCommand,
+    currentIndoorTemperature: 20.9,
+    now: new Date("2026-07-22T10:30:00.000Z"),
+  });
+  assert.match(result, /下がりすぎ/);
+});
+
+test("冷えすぎ: 目標温度に近い（下がりすぎていない） → null", () => {
+  const result = evaluateOvercooling({
+    commandRecord: coolingCommand,
+    currentIndoorTemperature: 23.5,
+    now: new Date("2026-07-22T10:30:00.000Z"),
+  });
+  assert.equal(result, null);
+});
+
+test("冷えすぎ: 暖房コマンドは対象外", () => {
+  const result = evaluateOvercooling({
+    commandRecord: { ...coolingCommand, modeLabel: "暖房" },
+    currentIndoorTemperature: 15,
+    now: new Date("2026-07-22T10:30:00.000Z"),
+  });
+  assert.equal(result, null);
+});
+
+test("冷えすぎ: OFFコマンドは対象外", () => {
+  const result = evaluateOvercooling({
+    commandRecord: { ...coolingCommand, power: "off" },
+    currentIndoorTemperature: 15,
+    now: new Date("2026-07-22T10:30:00.000Z"),
   });
   assert.equal(result, null);
 });

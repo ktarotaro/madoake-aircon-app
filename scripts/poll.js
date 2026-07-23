@@ -2,7 +2,7 @@ import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { getMeterStatus } from "../src/switchbotClient.js";
 import { getAmedasStatus } from "../src/weatherClient.js";
 import { decide } from "../src/logic.js";
-import { evaluateAcFeedback } from "../src/acFeedback.js";
+import { evaluateAcFeedback, evaluateOvercooling } from "../src/acFeedback.js";
 import { sendPushToAll, buildNotificationMessages } from "../src/pushNotifications.js";
 import { config } from "../src/config.js";
 
@@ -41,6 +41,7 @@ try {
 }
 
 const acFeedback = evaluateAcFeedback({ commandRecord, currentIndoorTemperature: indoor.temperature });
+const overcoolingWarning = evaluateOvercooling({ commandRecord, currentIndoorTemperature: indoor.temperature });
 
 const output = {
   updatedAt: new Date().toISOString(),
@@ -48,6 +49,7 @@ const output = {
   outdoor: { ...outdoor, observedAt: outdoorRaw.observedAt },
   ...result,
   acFeedback,
+  overcoolingWarning,
 };
 
 await mkdir("data", { recursive: true });

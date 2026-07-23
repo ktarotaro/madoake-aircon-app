@@ -45,6 +45,7 @@ export default async function Home() {
     outdoorAH,
     updatedAt,
     acFeedback,
+    overcoolingWarning,
   } = latest;
 
   return (
@@ -72,6 +73,10 @@ export default async function Home() {
         <p style={{ marginTop: 16, color: feedbackColor[acFeedback.status] ?? "#333" }}>
           {acFeedback.message}
         </p>
+      )}
+
+      {overcoolingWarning && (
+        <p style={{ marginTop: 8, color: "#2563eb", fontWeight: "bold" }}>❄️ {overcoolingWarning}</p>
       )}
 
       <hr style={{ margin: "24px 0" }} />
