@@ -57,7 +57,12 @@ export function evaluateOvercooling({ commandRecord, currentIndoorTemperature, n
   }
 
   if (currentIndoorTemperature <= commandRecord.temperature - OVERCOOL_MARGIN) {
-    return `室温が目標(${commandRecord.temperature}℃)より下がりすぎています（現在${currentIndoorTemperature}℃）。エアコンの設定を確認してください。`;
+    const sentAtLabel = new Date(commandRecord.sentAt).toLocaleTimeString("ja-JP", {
+      timeZone: "Asia/Tokyo",
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+    return `室温が送信時(${sentAtLabel})の目標温度(${commandRecord.temperature}℃)より下がりすぎています（現在${currentIndoorTemperature}℃）。エアコンの設定を確認してください。※現在画面に表示中の推奨設定温度とは異なる場合があります。`;
   }
 
   return null;
