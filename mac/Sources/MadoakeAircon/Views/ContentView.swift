@@ -128,6 +128,7 @@ struct ContentView: View {
                 if let feedback = latest.acFeedback {
                     Text(feedback.message)
                         .font(.caption)
+                        .bold()
                         .foregroundColor(feedbackColor(feedback.status))
                 }
 
@@ -186,10 +187,12 @@ struct ContentView: View {
         }
     }
 
+    // 標準の.green/.orangeはメニューバーポップオーバーの半透明背景で視認性が低いため、
+    // Web版と同じ濃い色（#16a34a等）を明示的に指定する（2026-07-23、本人からの指摘で修正）
     private func feedbackColor(_ status: String) -> Color {
         switch status {
-        case "ok": return .green
-        case "warning": return .orange
+        case "ok": return Color(red: 0x16 / 255, green: 0xa3 / 255, blue: 0x4a / 255)
+        case "warning": return Color(red: 0xd9 / 255, green: 0x77 / 255, blue: 0x06 / 255)
         default: return .secondary
         }
     }
