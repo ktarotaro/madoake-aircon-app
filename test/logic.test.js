@@ -82,6 +82,16 @@ test("寒い・屋外の方がさらに寒い → エアコン（暖房）また
   assert.equal(result.recommendedTemperature, 20);
 });
 
+test("寒い・屋外の方が暖かいが、屋外自体まだ寒い（18℃未満） → 窓を開けても解決しないので暖房", () => {
+  const result = decide({
+    indoor: { temperature: 10, humidity: 45 },
+    outdoor: { temperature: 15, humidity: 50 },
+    precipitation10m: 0,
+  });
+  assert.equal(result.judgment, "エアコン（暖房）またはストーブ");
+  assert.match(result.reason, /十分暖まりません/);
+});
+
 test("寒い・屋外の方が暖かい → 窓を開ける", () => {
   const result = decide({
     indoor: { temperature: 15, humidity: 45 },

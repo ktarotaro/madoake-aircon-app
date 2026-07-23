@@ -110,7 +110,11 @@ export function decide({ indoor, outdoor, precipitation10m, alpha = DEFAULT_ALPH
 
   // 寒い
   if (indoor.temperature < COLD_TEMP_THRESHOLD) {
-    const canOpenWindow = !isRaining && outdoor.temperature > indoor.temperature;
+    // 暑い側と同様、屋外の方が室内より暖かいだけでなく、屋外条件自体が「寒い」を脱しているか
+    // （COLD_TEMP_THRESHOLD以上）も確認する。屋外が「室内よりマシ」なだけでまだ寒い場合、
+    // 窓を開けても十分暖まらないため。
+    const isOutdoorWarmer = !isRaining && outdoor.temperature > indoor.temperature;
+    const canOpenWindow = isOutdoorWarmer && outdoor.temperature >= COLD_TEMP_THRESHOLD;
 
     if (canOpenWindow) {
       return {
@@ -121,9 +125,18 @@ export function decide({ indoor, outdoor, precipitation10m, alpha = DEFAULT_ALPH
       };
     }
 
+    let reason;
+    if (isRaining) {
+      reason = "雨天かつ室内が冷えています。";
+    } else if (isOutdoorWarmer) {
+      reason = "外気の方が暖かいですが、屋外もまだ寒く、窓を開けても十分暖まりません。";
+    } else {
+      reason = "室内が冷えています。";
+    }
+
     return {
       judgment: "エアコン（暖房）またはストーブ",
-      reason: isRaining ? "雨天かつ室内が冷えています。" : "室内が冷えています。",
+      reason,
       recommendedTemperature: HEATING_TARGET_TEMP,
       humidityNote,
       ...metrics,
