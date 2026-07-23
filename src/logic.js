@@ -11,6 +11,9 @@ export const DEFAULT_ALPHA = 0; // 絶対湿度の許容差分（湿気を持ち
 export const HEATING_TARGET_TEMP = 20; // 暖房の推奨設定温度（固定値。DIは寒さ側を評価できないため）
 export const HIGH_FAN_TEMP_GAP = 5; // 冷房：現在温度と推奨温度の差がこれ以上なら強風
 export const MEDIUM_FAN_TEMP_GAP = 2; // 冷房：現在温度と推奨温度の差がこれ以上なら中風
+export const COOLING_HUMIDITY_SPLIT = 55; // これ以上の湿度なら基本設定温度を1℃下げる
+export const COOLING_BASE_TEMP_LOW_HUMIDITY = 27; // 湿度が低め（55%未満）のときの基本設定温度
+export const COOLING_BASE_TEMP_HIGH_HUMIDITY = 26; // 湿度が高め（55%以上）のときの基本設定温度
 
 // 不快指数（DI）: 体感の快適さを判定する指標（暑さ側のみ意味を持つ）
 export function calculateDI(temperature, humidity) {
@@ -25,9 +28,12 @@ export function calculateAH(temperature, humidity) {
   return (217 * (saturationVaporPressure * relativeHumidityRatio)) / (273.15 + temperature);
 }
 
-// DI計算式を気温について逆算し、「目標DIちょうどになる気温」を求める（湿度は現在値のまま据え置き）
-export function solveCoolingTargetTemp(humidity, targetDI = COMFORTABLE_DI_THRESHOLD) {
-  return (targetDI - 46.3 + 0.143 * humidity) / (0.81 + 0.0099 * humidity);
+// 冷房の推奨設定温度：湿度に応じて26〜27℃を基本とするシンプルな方式。
+// 従来はDI=70になる気温を逆算していたが、DI70は「快適」ではなく「やや不快の境界」を
+// 意味する値であり、湿度が高いと現実的でない低温（23℃台等）が算出される問題があった
+// （2026-07-23、本人からのフィードバックを受けて変更）。
+export function recommendCoolingTemp(humidity) {
+  return humidity >= COOLING_HUMIDITY_SPLIT ? COOLING_BASE_TEMP_HIGH_HUMIDITY : COOLING_BASE_TEMP_LOW_HUMIDITY;
 }
 
 // 冷房時の推奨風量：現在の室温と推奨設定温度の差（＝下げる必要がある幅）から決める。
@@ -82,7 +88,7 @@ export function decide({ indoor, outdoor, precipitation10m, alpha = DEFAULT_ALPH
     }
 
     const isHumidityDriven = indoor.humidity >= HIGH_HUMIDITY_THRESHOLD;
-    const recommendedTemperature = round1(solveCoolingTargetTemp(indoor.humidity));
+    const recommendedTemperature = recommendCoolingTemp(indoor.humidity);
     const recommendedFanSpeed = isHumidityDriven
       ? "弱風"
       : recommendCoolingFanSpeed(indoor.temperature, recommendedTemperature);
