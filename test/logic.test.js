@@ -2,13 +2,23 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import { decide } from "../src/logic.js";
 
-test("暑い・屋外の方が涼しく乾いている → 窓を開ける", () => {
+test("暑い・屋外の方が涼しく乾いている・屋外も十分快適 → 窓を開ける", () => {
+  const result = decide({
+    indoor: { temperature: 30, humidity: 55 },
+    outdoor: { temperature: 20, humidity: 50 },
+    precipitation10m: 0,
+  });
+  assert.equal(result.judgment, "窓を開ける");
+});
+
+test("暑い・屋外の方が涼しく乾いているが、屋外自体まだ蒸し暑い（DI>70） → 窓を開けても解決しないのでエアコン", () => {
   const result = decide({
     indoor: { temperature: 29.7, humidity: 59 },
     outdoor: { temperature: 23.9, humidity: 81 },
     precipitation10m: 0,
   });
-  assert.equal(result.judgment, "窓を開ける");
+  assert.equal(result.judgment, "エアコン（冷房）");
+  assert.match(result.reason, /十分涼しくなりません/);
 });
 
 test("暑い・屋外の方が湿っている → エアコン（冷房）と推奨温度・強風が出る", () => {

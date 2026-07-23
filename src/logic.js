@@ -66,8 +66,11 @@ export function decide({ indoor, outdoor, precipitation10m, alpha = DEFAULT_ALPH
 
   // 暑くて不快
   if (indoorDI > COMFORTABLE_DI_THRESHOLD) {
-    const canOpenWindow =
+    // 屋外の方が涼しく乾いているだけでなく、屋外条件自体が快適圏（DI以下）であることも確認する。
+    // 屋外が「室内よりマシ」なだけで実際は暑い場合、窓を開けても十分涼しくならないため。
+    const isOutdoorCoolerAndDrier =
       !isRaining && outdoor.temperature < indoor.temperature && outdoorAH <= indoorAH + alpha;
+    const canOpenWindow = isOutdoorCoolerAndDrier && outdoorDI <= COMFORTABLE_DI_THRESHOLD;
 
     if (canOpenWindow) {
       return {
@@ -84,13 +87,20 @@ export function decide({ indoor, outdoor, precipitation10m, alpha = DEFAULT_ALPH
       ? "弱風"
       : recommendCoolingFanSpeed(indoor.temperature, recommendedTemperature);
 
+    let reason;
+    if (isRaining) {
+      reason = "雨天のため換気非推奨です。";
+    } else if (isOutdoorCoolerAndDrier) {
+      reason = "外気の方が涼しいですが、屋外も蒸し暑く、窓を開けても十分涼しくなりません。";
+    } else if (isHumidityDriven) {
+      reason = "気温よりも湿気が原因の不快感のため、除湿が有効です。";
+    } else {
+      reason = "外気を入れると余計蒸し暑くなります。";
+    }
+
     return {
       judgment: isHumidityDriven ? "エアコン（除湿）" : "エアコン（冷房）",
-      reason: isRaining
-        ? "雨天のため換気非推奨です。"
-        : isHumidityDriven
-          ? "気温よりも湿気が原因の不快感のため、除湿が有効です。"
-          : "外気を入れると余計蒸し暑くなります。",
+      reason,
       recommendedTemperature,
       recommendedFanSpeed,
       humidityNote,
