@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { sendAcCommand, AC_MODE, AC_FAN_SPEED } from "../../../lib/switchbot";
+import { sendAcCommand, AC_MODE, AC_FAN_SPEED, fanSpeedFromLabel } from "../../../lib/switchbot";
 import { getJsonFile, putJsonFile } from "../../../lib/github";
 import { config } from "../../../lib/config";
 
@@ -34,6 +34,8 @@ export async function POST(request) {
       temperature: null,
       mode: null,
       modeLabel: "OFF",
+      fanSpeed: null,
+      fanSpeedLabel: null,
       basedOnJudgment: null,
       indoorTemperatureAtCommand: null,
     };
@@ -63,6 +65,8 @@ export async function POST(request) {
       temperature: latest.recommendedTemperature,
       mode: matched.mode,
       modeLabel: matched.label,
+      fanSpeed: fanSpeedFromLabel(latest.recommendedFanSpeed),
+      fanSpeedLabel: latest.recommendedFanSpeed ?? "自動",
       basedOnJudgment: { judgment: latest.judgment, reason: latest.reason, updatedAt: latest.updatedAt },
       indoorTemperatureAtCommand: latest.indoor.temperature,
     };
@@ -75,7 +79,7 @@ export async function POST(request) {
       deviceId: config.switchbotAcDeviceId,
       temperature: commandLog.temperature ?? 23,
       mode: commandLog.mode ?? AC_MODE.COOL,
-      fanSpeed: AC_FAN_SPEED.AUTO,
+      fanSpeed: commandLog.fanSpeed ?? AC_FAN_SPEED.AUTO,
       power: commandLog.power,
     });
   } catch (err) {

@@ -37,6 +37,13 @@ export async function getMeterStatus({ token, secret, deviceId }) {
 export const AC_MODE = { AUTO: 1, COOL: 2, DRY: 3, FAN: 4, HEAT: 5 };
 export const AC_FAN_SPEED = { AUTO: 1, LOW: 2, MEDIUM: 3, HIGH: 4 };
 
+const FAN_SPEED_LABELS = { 自動: AC_FAN_SPEED.AUTO, 弱風: AC_FAN_SPEED.LOW, 中風: AC_FAN_SPEED.MEDIUM, 強風: AC_FAN_SPEED.HIGH };
+
+// src/logic.js の recommendedFanSpeed（日本語ラベル）をSwitchBot APIの数値に変換する
+export function fanSpeedFromLabel(label) {
+  return FAN_SPEED_LABELS[label] ?? AC_FAN_SPEED.AUTO;
+}
+
 // 安全設定（本人の明示的な指示、2026-07-22）：暖房・自動モードでは絶対にエアコンを操作しない。
 // 呼び出し元のミスがあっても物理的に防げるよう、ここで最終ガードをかける。
 const ALLOWED_AC_MODES = new Set([AC_MODE.COOL, AC_MODE.DRY]);

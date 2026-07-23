@@ -34,6 +34,7 @@ export default async function Home() {
     judgment,
     reason,
     recommendedTemperature,
+    recommendedFanSpeed,
     humidityNote,
     indoor,
     outdoor,
@@ -54,11 +55,15 @@ export default async function Home() {
       {recommendedTemperature != null && (
         <p>推奨設定温度: <strong>{recommendedTemperature}℃</strong></p>
       )}
+      {recommendedFanSpeed != null && (
+        <p>推奨風量: <strong>{recommendedFanSpeed}</strong></p>
+      )}
       {humidityNote && <p style={{ color: "#d97706" }}>⚠ {humidityNote}</p>}
 
       <AcControls
         judgment={judgment}
         recommendedTemperature={recommendedTemperature}
+        recommendedFanSpeed={recommendedFanSpeed}
         modeLabel={modeLabelByJudgment[judgment]}
       />
 

@@ -71,7 +71,8 @@ struct ContentView: View {
             return "エアコンをOFFにします。よろしいですか？"
         }
         let temp = latest.recommendedTemperature.map { "\($0)℃" } ?? ""
-        return "\(latest.modeLabel ?? "")・\(temp) でエアコンを操作します。よろしいですか？"
+        let fanSpeed = latest.recommendedFanSpeed ?? "自動"
+        return "\(latest.modeLabel ?? "")・\(temp)・\(fanSpeed) でエアコンを操作します。よろしいですか？"
     }
 
     @ViewBuilder
@@ -91,6 +92,12 @@ struct ContentView: View {
 
                 if let temp = latest.recommendedTemperature {
                     Text("推奨設定温度: \(temp, specifier: "%.1f")℃")
+                        .font(.callout)
+                        .bold()
+                }
+
+                if let fanSpeed = latest.recommendedFanSpeed {
+                    Text("推奨風量: \(fanSpeed)")
                         .font(.callout)
                         .bold()
                 }

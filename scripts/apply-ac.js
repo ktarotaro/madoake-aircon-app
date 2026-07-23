@@ -9,7 +9,7 @@
 // 赤外線リモコンは一方通行の信号のため、エアコンが実際にその通り反応したかは
 // API側では確認できない。最終的な確認は必ず目視で行うこと。
 import { readFile, writeFile } from "node:fs/promises";
-import { sendAcCommand, AC_MODE, AC_FAN_SPEED } from "../src/switchbotClient.js";
+import { sendAcCommand, AC_MODE, AC_FAN_SPEED, fanSpeedFromLabel } from "../src/switchbotClient.js";
 import { config } from "../src/config.js";
 
 const token = process.env.SWITCHBOT_TOKEN;
@@ -30,6 +30,8 @@ if (isOff) {
     temperature: null,
     mode: null,
     modeLabel: "OFF",
+    fanSpeed: null,
+    fanSpeedLabel: null,
     basedOnJudgment: null,
     indoorTemperatureAtCommand: null,
   };
@@ -59,6 +61,8 @@ if (isOff) {
     temperature: latest.recommendedTemperature,
     mode: matched.mode,
     modeLabel: matched.label,
+    fanSpeed: fanSpeedFromLabel(latest.recommendedFanSpeed),
+    fanSpeedLabel: latest.recommendedFanSpeed ?? "自動",
     basedOnJudgment: { judgment: latest.judgment, reason: latest.reason, updatedAt: latest.updatedAt },
     indoorTemperatureAtCommand: latest.indoor.temperature,
   };
@@ -74,7 +78,7 @@ await sendAcCommand({
   deviceId: config.switchbotAcDeviceId,
   temperature: commandLog.temperature ?? 23,
   mode: commandLog.mode ?? AC_MODE.COOL,
-  fanSpeed: AC_FAN_SPEED.AUTO,
+  fanSpeed: commandLog.fanSpeed ?? AC_FAN_SPEED.AUTO,
   power: commandLog.power,
 });
 

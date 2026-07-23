@@ -7,6 +7,7 @@ struct LatestData: Codable {
     let judgment: String
     let reason: String
     let recommendedTemperature: Double?
+    let recommendedFanSpeed: String?
     let humidityNote: String?
     let indoorDI: Double
     let outdoorDI: Double

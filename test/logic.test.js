@@ -11,7 +11,7 @@ test("暑い・屋外の方が涼しく乾いている → 窓を開ける", () 
   assert.equal(result.judgment, "窓を開ける");
 });
 
-test("暑い・屋外の方が湿っている → エアコン（冷房）と推奨温度が出る", () => {
+test("暑い・屋外の方が湿っている → エアコン（冷房）と推奨温度・強風が出る", () => {
   const result = decide({
     indoor: { temperature: 29.9, humidity: 58 },
     outdoor: { temperature: 23.6, humidity: 84 },
@@ -19,9 +19,10 @@ test("暑い・屋外の方が湿っている → エアコン（冷房）と推
   });
   assert.equal(result.judgment, "エアコン（冷房）");
   assert.ok(result.recommendedTemperature > 0);
+  assert.equal(result.recommendedFanSpeed, "強風");
 });
 
-test("暑い・湿度が非常に高い → エアコン（除湿）", () => {
+test("暑い・湿度が非常に高い → エアコン（除湿）、風量は常に弱風", () => {
   const result = decide({
     indoor: { temperature: 28, humidity: 75 },
     outdoor: { temperature: 27, humidity: 80 },
@@ -29,6 +30,27 @@ test("暑い・湿度が非常に高い → エアコン（除湿）", () => {
   });
   assert.equal(result.judgment, "エアコン（除湿）");
   assert.match(result.reason, /湿気/);
+  assert.equal(result.recommendedFanSpeed, "弱風");
+});
+
+test("冷房・現在温度と推奨温度の差が2〜5℃ → 中風", () => {
+  const result = decide({
+    indoor: { temperature: 27, humidity: 55 },
+    outdoor: { temperature: 28, humidity: 50 },
+    precipitation10m: 0,
+  });
+  assert.equal(result.judgment, "エアコン（冷房）");
+  assert.equal(result.recommendedFanSpeed, "中風");
+});
+
+test("冷房・現在温度が推奨温度に近い → 自動", () => {
+  const result = decide({
+    indoor: { temperature: 24, humidity: 60 },
+    outdoor: { temperature: 25, humidity: 70 },
+    precipitation10m: 0,
+  });
+  assert.equal(result.judgment, "エアコン（冷房）");
+  assert.equal(result.recommendedFanSpeed, "自動");
 });
 
 test("雨天 → 暑くても窓を開けない", () => {

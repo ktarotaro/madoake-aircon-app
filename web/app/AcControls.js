@@ -4,14 +4,14 @@ import { useState } from "react";
 
 const AC_JUDGMENTS = ["エアコン（冷房）", "エアコン（除湿）"];
 
-export default function AcControls({ judgment, recommendedTemperature, modeLabel }) {
+export default function AcControls({ judgment, recommendedTemperature, recommendedFanSpeed, modeLabel }) {
   const [status, setStatus] = useState(null); // null | "loading" | { ok } | { error }
 
   const canExecute = AC_JUDGMENTS.includes(judgment);
 
   async function handleExecute() {
     const confirmed = window.confirm(
-      `以下の内容でエアコンを操作します。よろしいですか？\n\n${modeLabel}・${recommendedTemperature}℃\n\n※実際にエアコンが反応したかは目視で確認してください。`
+      `以下の内容でエアコンを操作します。よろしいですか？\n\n${modeLabel}・${recommendedTemperature}℃・${recommendedFanSpeed ?? "自動"}\n\n※実際にエアコンが反応したかは目視で確認してください。`
     );
     if (!confirmed) return;
 

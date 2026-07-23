@@ -9,6 +9,8 @@ export const DRY_HUMIDITY_THRESHOLD = 40; // これを下回ると「乾燥」
 export const HIGH_HUMIDITY_THRESHOLD = 65; // 暑い判定の中でも、これ以上の湿度なら冷房より除湿を優先
 export const DEFAULT_ALPHA = 0; // 絶対湿度の許容差分（湿気を持ち込むかの判定閾値）
 export const HEATING_TARGET_TEMP = 20; // 暖房の推奨設定温度（固定値。DIは寒さ側を評価できないため）
+export const HIGH_FAN_TEMP_GAP = 5; // 冷房：現在温度と推奨温度の差がこれ以上なら強風
+export const MEDIUM_FAN_TEMP_GAP = 2; // 冷房：現在温度と推奨温度の差がこれ以上なら中風
 
 // 不快指数（DI）: 体感の快適さを判定する指標（暑さ側のみ意味を持つ）
 export function calculateDI(temperature, humidity) {
@@ -26,6 +28,15 @@ export function calculateAH(temperature, humidity) {
 // DI計算式を気温について逆算し、「目標DIちょうどになる気温」を求める（湿度は現在値のまま据え置き）
 export function solveCoolingTargetTemp(humidity, targetDI = COMFORTABLE_DI_THRESHOLD) {
   return (targetDI - 46.3 + 0.143 * humidity) / (0.81 + 0.0099 * humidity);
+}
+
+// 冷房時の推奨風量：現在の室温と推奨設定温度の差（＝下げる必要がある幅）から決める。
+// 除湿は常に弱風固定（強風にしても除湿効率は大きく上がらず、体感的に冷えすぎるため）。
+export function recommendCoolingFanSpeed(currentTemperature, recommendedTemperature) {
+  const gap = currentTemperature - recommendedTemperature;
+  if (gap >= HIGH_FAN_TEMP_GAP) return "強風";
+  if (gap >= MEDIUM_FAN_TEMP_GAP) return "中風";
+  return "自動";
 }
 
 /**
@@ -68,6 +79,10 @@ export function decide({ indoor, outdoor, precipitation10m, alpha = DEFAULT_ALPH
     }
 
     const isHumidityDriven = indoor.humidity >= HIGH_HUMIDITY_THRESHOLD;
+    const recommendedTemperature = round1(solveCoolingTargetTemp(indoor.humidity));
+    const recommendedFanSpeed = isHumidityDriven
+      ? "弱風"
+      : recommendCoolingFanSpeed(indoor.temperature, recommendedTemperature);
 
     return {
       judgment: isHumidityDriven ? "エアコン（除湿）" : "エアコン（冷房）",
@@ -76,7 +91,8 @@ export function decide({ indoor, outdoor, precipitation10m, alpha = DEFAULT_ALPH
         : isHumidityDriven
           ? "気温よりも湿気が原因の不快感のため、除湿が有効です。"
           : "外気を入れると余計蒸し暑くなります。",
-      recommendedTemperature: round1(solveCoolingTargetTemp(indoor.humidity)),
+      recommendedTemperature,
+      recommendedFanSpeed,
       humidityNote,
       ...metrics,
     };
