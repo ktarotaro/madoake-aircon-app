@@ -3,6 +3,7 @@ import { getMeterStatus } from "../src/switchbotClient.js";
 import { getAmedasStatus } from "../src/weatherClient.js";
 import { decide } from "../src/logic.js";
 import { evaluateAcFeedback } from "../src/acFeedback.js";
+import { sendPushToAll, buildNotificationMessages } from "../src/pushNotifications.js";
 import { config } from "../src/config.js";
 
 const token = process.env.SWITCHBOT_TOKEN;
@@ -32,6 +33,13 @@ try {
   // まだ一度もエアコンを操作していない場合はファイルが存在しない。無視してよい。
 }
 
+let previous = null;
+try {
+  previous = JSON.parse(await readFile("data/latest.json", "utf8"));
+} catch {
+  // 初回実行時はファイルが存在しない。無視してよい。
+}
+
 const acFeedback = evaluateAcFeedback({ commandRecord, currentIndoorTemperature: indoor.temperature });
 
 const output = {
@@ -46,3 +54,39 @@ await mkdir("data", { recursive: true });
 await writeFile("data/latest.json", JSON.stringify(output, null, 2) + "\n");
 
 console.log(JSON.stringify(output, null, 2));
+
+// 判定・乾燥注意が変化していれば、購読中のブラウザへWeb Pushで通知する
+const vapidPrivateKey = process.env.VAPID_PRIVATE_KEY;
+const messages = buildNotificationMessages(previous, output);
+
+if (messages.length > 0 && vapidPrivateKey) {
+  let subscriptions = [];
+  try {
+    subscriptions = JSON.parse(await readFile("data/push-subscriptions.json", "utf8"));
+  } catch {
+    // 誰も購読していない場合はファイルが存在しない。無視してよい。
+  }
+
+  if (subscriptions.length > 0) {
+    const deadEndpointSet = new Set();
+    for (const message of messages) {
+      const { deadEndpoints } = await sendPushToAll({
+        subscriptions,
+        vapidPrivateKey,
+        title: message.title,
+        body: message.body,
+      });
+      deadEndpoints.forEach((endpoint) => deadEndpointSet.add(endpoint));
+    }
+
+    if (deadEndpointSet.size > 0) {
+      const alive = subscriptions.filter((s) => !deadEndpointSet.has(s.endpoint));
+      await writeFile("data/push-subscriptions.json", JSON.stringify(alive, null, 2) + "\n");
+      console.log(`失効した購読先を${deadEndpointSet.size}件削除しました。`);
+    }
+
+    console.log(`プッシュ通知を送信しました: ${messages.map((m) => m.title).join(", ")}`);
+  }
+} else if (messages.length > 0 && !vapidPrivateKey) {
+  console.log("VAPID_PRIVATE_KEYが未設定のため、プッシュ通知はスキップしました。");
+}

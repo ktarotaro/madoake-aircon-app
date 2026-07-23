@@ -5,5 +5,7 @@ export const config = {
   githubBranch: "main",
   latestJsonPath: "data/latest.json",
   acLastCommandPath: "data/ac-last-command.json",
+  pushSubscriptionsPath: "data/push-subscriptions.json",
   switchbotAcDeviceId: "02-202607221902-63118021",
+  vapidPublicKey: "BCDUC3YlJuRhKg59YNauawqODaDhhh2bmLEwDML7QBArCZ8ejskkoE7Kc-rDFeRD_YJ9TdiVUfObQmNH8M6oohY",
 };

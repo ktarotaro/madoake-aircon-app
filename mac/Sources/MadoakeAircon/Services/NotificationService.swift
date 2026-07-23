@@ -8,10 +8,24 @@ enum NotificationService {
 
     static func notifyJudgmentChanged(from previous: String?, to current: LatestData) {
         guard let previous, previous != current.judgment else { return }
+        send(title: "判定が変わりました: \(current.judgment)", body: current.reason)
+    }
 
+    // 乾燥注意（humidityNote）の有無が変わったときに通知する（判定＝judgmentとは独立した項目のため別枠で監視）
+    static func notifyHumidityNoteChanged(from previous: String?, to current: LatestData) {
+        guard previous != current.humidityNote else { return }
+
+        if let note = current.humidityNote {
+            send(title: "乾燥注意", body: note)
+        } else if previous != nil {
+            send(title: "乾燥注意は解消しました", body: "室内の湿度が回復しました。")
+        }
+    }
+
+    private static func send(title: String, body: String) {
         let content = UNMutableNotificationContent()
-        content.title = "判定が変わりました: \(current.judgment)"
-        content.body = current.reason
+        content.title = title
+        content.body = body
         content.sound = .default
 
         let request = UNNotificationRequest(

@@ -1,5 +1,6 @@
 import AcControls from "./AcControls";
 import LogoutButton from "./LogoutButton";
+import NotificationSubscribeButton from "./NotificationSubscribeButton";
 
 export const dynamic = "force-dynamic";
 
@@ -108,6 +109,8 @@ export default async function Home() {
       <p style={{ marginTop: 24, fontSize: 12, color: "#999" }}>
         最終更新: {new Date(updatedAt).toLocaleString("ja-JP")}
       </p>
+
+      <NotificationSubscribeButton />
 
       <div style={{ marginTop: 8 }}>
         <LogoutButton />
