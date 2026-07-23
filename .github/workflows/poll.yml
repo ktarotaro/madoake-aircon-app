@@ -35,4 +35,14 @@ jobs:
           git add data/latest.json
           [ -f data/push-subscriptions.json ] && git add data/push-subscriptions.json
           git diff --quiet --cached || git commit -m "Update judgment result $(date -u +%Y-%m-%dT%H:%M:%SZ)"
-          git push
+          # 手動pushとのタイミング競合でpushが拒否されることがあるため、
+          # 最新のjudgmentデータ（このジョブが今計算した値）を優先してリトライする
+          # （2026-07-23、Poll and judge #13の失敗を受けて追加）。
+          # 注意：git rebaseはmergeとours/theirsの意味が逆転する。rebase時の
+          # theirsは「リプレイされる側＝ローカルのコミット」を指すため、
+          # ローカル優先にするにはtheirsを指定する（実機検証済み）。
+          for i in 1 2 3; do
+            git pull --rebase -X theirs origin main && git push && break
+            echo "push failed, retrying ($i/3)..."
+            sleep 5
+          done
