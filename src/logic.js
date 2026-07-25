@@ -7,7 +7,7 @@ export const COMFORTABLE_DI_THRESHOLD = 70; // これを超えると「暑くて
 export const COLD_TEMP_THRESHOLD = 18; // これを下回ると「寒い」（一般的な室内快適温度の下限）
 export const DRY_HUMIDITY_THRESHOLD = 40; // これを下回ると「乾燥」
 export const HIGH_HUMIDITY_THRESHOLD = 65; // 暑い判定の中でも、これ以上の湿度なら冷房より除湿を優先
-export const DEFAULT_ALPHA = 0; // 絶対湿度の許容差分（湿気を持ち込むかの判定閾値）
+export const DEFAULT_ALPHA = 2.0; // 絶対湿度の許容差分（湿気を持ち込むかの判定閾値。電気代優先のため0→2.0 g/m³に緩和、2026-07-25）
 export const HEATING_TARGET_TEMP = 20; // 暖房の推奨設定温度（固定値。DIは寒さ側を評価できないため）
 export const HIGH_FAN_TEMP_GAP = 5; // 冷房：現在温度と推奨温度の差がこれ以上なら強風
 export const MEDIUM_FAN_TEMP_GAP = 2; // 冷房：現在温度と推奨温度の差がこれ以上なら中風
@@ -96,10 +96,11 @@ export function decide({ indoor, outdoor, precipitation10m, alpha = DEFAULT_ALPH
     let reason;
     if (isRaining) {
       reason = "雨天のため換気非推奨です。";
+    } else if (isHumidityDriven) {
+      // 除湿を選ぶ理由（室内湿度が高いこと）は、屋外の温度事情より優先して伝える
+      reason = "気温よりも湿気が原因の不快感のため、除湿が有効です。";
     } else if (isOutdoorCoolerAndDrier) {
       reason = "外気の方が涼しいですが、屋外も蒸し暑く、窓を開けても十分涼しくなりません。";
-    } else if (isHumidityDriven) {
-      reason = "気温よりも湿気が原因の不快感のため、除湿が有効です。";
     } else {
       reason = "外気を入れると余計蒸し暑くなります。";
     }

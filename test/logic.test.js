@@ -21,6 +21,15 @@ test("暑い・屋外の方が涼しく乾いているが、屋外自体まだ�
   assert.match(result.reason, /十分涼しくなりません/);
 });
 
+test("暑い・屋外の方が涼しいが絶対湿度がわずかに高い（差0.8g/m³） → α=2.0の許容差分内なので窓を開ける", () => {
+  const result = decide({
+    indoor: { temperature: 26.5, humidity: 52 },
+    outdoor: { temperature: 19.3, humidity: 83 },
+    precipitation10m: 0,
+  });
+  assert.equal(result.judgment, "窓を開ける");
+});
+
 test("暑い・屋外の方が湿っている → エアコン（冷房）と推奨温度・強風が出る", () => {
   const result = decide({
     indoor: { temperature: 32, humidity: 58 },
