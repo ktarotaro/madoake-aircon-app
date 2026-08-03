@@ -1,9 +1,23 @@
 import Foundation
 import UserNotifications
+import AppKit
 
 enum NotificationService {
+    static func sendTest() {
+        send(title: "テスト通知", body: "これはテスト通知です。届いていれば通知設定は正常です。")
+    }
+
+    // LSUIElement（Dockアイコンなし）アプリはバックグラウンド状態のままだと
+    // システムが通知許可の同意ダイアログ・通知設定一覧への登録を正しく行わないことがあるため、
+    // リクエスト中だけ一時的に通常アプリ扱いにして前面化する（2026-08-03、通知が届かない不具合の対策）。
     static func requestAuthorization() {
-        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound]) { _, _ in }
+        NSApp.setActivationPolicy(.regular)
+        NSApp.activate(ignoringOtherApps: true)
+        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound, .badge]) { _, _ in
+            DispatchQueue.main.async {
+                NSApp.setActivationPolicy(.accessory)
+            }
+        }
     }
 
     static func notifyJudgmentChanged(from previous: String?, to current: LatestData) {

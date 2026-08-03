@@ -1,4 +1,5 @@
 import SwiftUI
+import AppKit
 
 struct ContentView: View {
     @EnvironmentObject var viewModel: AppViewModel
@@ -166,9 +167,18 @@ struct ContentView: View {
                 HStack {
                     Button("再読み込み") { Task { await viewModel.refresh() } }
                         .font(.caption)
+                    Button("テスト通知を送る") { NotificationService.sendTest() }
+                        .font(.caption)
                     Spacer()
                     Button("ログアウト") { viewModel.logout() }
                         .font(.caption)
+                }
+
+                HStack {
+                    Spacer()
+                    Button("アプリを終了") { NSApp.terminate(nil) }
+                        .font(.caption)
+                        .foregroundColor(SystemStatusColor.error)
                 }
             }
             .padding(16)
