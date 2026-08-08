@@ -1,26 +1,23 @@
 {
-  "updatedAt": "2026-08-08T02:17:04.161Z",
+  "updatedAt": "2026-08-08T03:46:42.729Z",
   "indoor": {
-    "temperature": 28,
-    "humidity": 56
+    "temperature": 29.5,
+    "humidity": 55
   },
   "outdoor": {
-    "temperature": 21.8,
-    "humidity": 92,
-    "observedAt": "2026-08-08T11:00:00+09:00"
+    "temperature": 23.8,
+    "humidity": 76,
+    "observedAt": "2026-08-08T12:30:00+09:00"
   },
   "judgment": "エアコン（冷房）",
-  "reason": "外気を入れると余計蒸し暑くなります。",
+  "reason": "外気の方が涼しいですが、屋外も蒸し暑く、窓を開けても十分涼しくなりません。",
   "recommendedTemperature": 26,
   "recommendedFanSpeed": "中風",
   "humidityNote": null,
-  "indoorDI": 76.5,
-  "outdoorDI": 70.7,
-  "indoorAH": 15.2,
-  "outdoorAH": 17.6,
-  "acFeedback": {
-    "status": "warning",
-    "message": "除湿に反応していない可能性があります。ご確認ください（送信時からの変化：-0.1℃）。"
-  },
+  "indoorDI": 78.4,
+  "outdoorDI": 72.6,
+  "indoorAH": 16.2,
+  "outdoorAH": 16.3,
+  "acFeedback": null,
   "overcoolingWarning": null
 }
