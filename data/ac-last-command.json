@@ -1,17 +1,17 @@
 {
-  "sentAt": "2026-08-07T14:02:12.183Z",
+  "sentAt": "2026-08-08T00:05:06.371Z",
   "power": "on",
   "temperature": 26,
-  "mode": 2,
-  "modeLabel": "冷房",
-  "fanSpeed": 3,
-  "fanSpeedLabel": "中風",
+  "mode": 3,
+  "modeLabel": "除湿",
+  "fanSpeed": 2,
+  "fanSpeedLabel": "弱風",
   "basedOnJudgment": {
-    "judgment": "エアコン（冷房）",
-    "reason": "外気の方が涼しいですが、屋外も蒸し暑く、窓を開けても十分涼しくなりません。",
-    "updatedAt": "2026-08-07T12:54:22.330Z"
+    "judgment": "エアコン（除湿）",
+    "reason": "気温よりも湿気が原因の不快感のため、除湿が有効です。",
+    "updatedAt": "2026-08-08T00:03:48.933Z"
   },
-  "indoorTemperatureAtCommand": 29.4,
+  "indoorTemperatureAtCommand": 28.1,
   "note": "赤外線リモコン経由のため、エアコンが実際にこの通り反応したかはAPIでは確認できません。目視で確認してください。",
   "triggeredFrom": "web"
 }
