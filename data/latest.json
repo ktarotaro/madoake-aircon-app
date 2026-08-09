@@ -1,21 +1,21 @@
 {
-  "updatedAt": "2026-08-09T09:53:08.828Z",
+  "updatedAt": "2026-08-09T10:30:05.755Z",
   "indoor": {
-    "temperature": 29.7,
+    "temperature": 29.3,
     "humidity": 45
   },
   "outdoor": {
-    "temperature": 22.2,
+    "temperature": 22,
     "humidity": 67,
-    "observedAt": "2026-08-09T18:40:00+09:00"
+    "observedAt": "2026-08-09T19:20:00+09:00"
   },
   "judgment": "窓を開ける",
-  "reason": "外気の方が7.5℃涼しく、湿気も室内より少なめです。",
+  "reason": "外気の方が7.3℃涼しく、湿気も室内より少なめです。",
   "humidityNote": null,
-  "indoorDI": 77.2,
-  "outdoorDI": 69.4,
-  "indoorAH": 13.4,
-  "outdoorAH": 13.1,
+  "indoorDI": 76.7,
+  "outdoorDI": 69.1,
+  "indoorAH": 13.1,
+  "outdoorAH": 13,
   "acFeedback": null,
   "overcoolingWarning": null
 }
