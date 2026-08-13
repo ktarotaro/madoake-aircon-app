@@ -79,113 +79,133 @@ struct ContentView: View {
 
     @ViewBuilder
     private func dashboard(_ latest: LatestData) -> some View {
-        ScrollView {
-            VStack(alignment: .leading, spacing: 10) {
+        VStack(alignment: .leading, spacing: 10) {
+            // ヘッダー（判定結果）
+            VStack(alignment: .leading, spacing: 2) {
                 Text("窓開け／エアコン判断アプリ")
                     .font(.caption)
                     .foregroundColor(.secondary)
-
                 Text(latest.judgment)
                     .font(.system(size: 24, weight: .bold))
+            }
 
-                Text(latest.reason)
-                    .font(.callout)
-                    .foregroundColor(.secondary)
-
-                if let temp = latest.recommendedTemperature {
-                    Text("推奨設定温度: \(temp, specifier: "%.1f")℃")
+            // 中央の動的コンテンツ（スクロール可能）
+            ScrollView {
+                VStack(alignment: .leading, spacing: 6) {
+                    Text(latest.reason)
                         .font(.callout)
-                        .bold()
-                }
+                        .foregroundColor(.secondary)
 
-                if let fanSpeed = latest.recommendedFanSpeed {
-                    Text("推奨風量: \(fanSpeed)")
-                        .font(.callout)
-                        .bold()
-                }
-
-                if let note = latest.humidityNote {
-                    Text("⚠ \(note)")
-                        .font(.caption)
-                        .foregroundColor(SystemStatusColor.warning)
-                }
-
-                HStack(spacing: 8) {
-                    if latest.isAcExecutable {
-                        Button("この設定で実行する") { pendingAction = .on }
-                            .buttonStyle(.borderedProminent)
+                    if let temp = latest.recommendedTemperature {
+                        Text("推奨温度: \(temp, specifier: "%.1f")℃")
+                            .font(.callout)
+                            .bold()
                     }
-                    Button("エアコンをOFFにする") { pendingAction = .off }
+
+                    if let fanSpeed = latest.recommendedFanSpeed {
+                        Text("推奨風量: \(fanSpeed)")
+                            .font(.callout)
+                            .bold()
+                    }
+
+                    // メイン操作ボタン（推奨風量の下）
+                    HStack(spacing: 8) {
+                        if latest.isAcExecutable {
+                            Button(action: { pendingAction = .on }) {
+                                Text("実行する")
+                                    .font(.body)
+                                    .foregroundColor(.white)
+                                    .frame(maxWidth: .infinity)
+                                    .frame(height: 40)
+                            }
+                            .buttonStyle(.borderedProminent)
+                        }
+                        Button(action: { pendingAction = .off }) {
+                            Text("OFFにする")
+                                .font(.body)
+                                .frame(maxWidth: .infinity)
+                                .frame(height: 40)
+                        }
+                        .buttonStyle(.bordered)
+                    }
+                    .disabled(viewModel.isLoading || pendingAction != nil)
+
+                    if let note = latest.humidityNote {
+                        Text("⚠ \(note)")
+                            .font(.caption)
+                            .foregroundColor(SystemStatusColor.warning)
+                    }
+
+                    confirmationRow(latest)
+
+                    if let result = viewModel.actionResultMessage {
+                        Text(result).font(.caption2).foregroundColor(SystemStatusColor.success)
+                    }
+                    if let error = viewModel.errorMessage {
+                        Text(error).font(.caption2).foregroundColor(SystemStatusColor.error)
+                    }
+                    if let feedback = latest.acFeedback {
+                        Text(feedback.message)
+                            .font(.caption2)
+                            .foregroundColor(feedbackColor(feedback.status))
+                    }
+
+                    if let warning = latest.overcoolingWarning {
+                        Text("❄️ \(warning)")
+                            .font(.caption2)
+                            .foregroundColor(SystemStatusColor.info)
+                    }
+
+                    Divider()
+
+                    HStack(alignment: .top, spacing: 12) {
+                        readingColumn(title: "室内", reading: latest.indoor.temperature, humidity: latest.indoor.humidity, di: latest.indoorDI, ah: latest.indoorAH)
+                        readingColumn(title: "屋外", reading: latest.outdoor.temperature, humidity: latest.outdoor.humidity, di: latest.outdoorDI, ah: latest.outdoorAH)
+                    }
+
+                    Divider()
+
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text("指標の説明").font(.caption2).bold()
+                        Text("DI：≤60 快適 / 60-70 やや暑い / >70 不快")
+                            .font(.caption2).foregroundColor(.secondary)
+                    }
+
+                    Text("最終更新: \(formattedDate(latest.updatedAtDate))")
+                        .font(.caption2)
+                        .foregroundColor(.secondary)
                 }
-                .disabled(viewModel.isLoading || pendingAction != nil)
+            }
 
-                confirmationRow(latest)
-
-                if let result = viewModel.actionResultMessage {
-                    Text(result).font(.caption).foregroundColor(SystemStatusColor.success)
-                }
-                if let error = viewModel.errorMessage {
-                    Text(error).font(.caption).foregroundColor(SystemStatusColor.error)
-                }
-                if let feedback = latest.acFeedback {
-                    Text(feedback.message)
-                        .font(.caption)
-                        .foregroundColor(feedbackColor(feedback.status))
-                }
-
-                if let warning = latest.overcoolingWarning {
-                    Text("❄️ \(warning)")
-                        .font(.caption)
-                        .foregroundColor(SystemStatusColor.info)
-                }
-
-                Divider()
-
-                HStack(alignment: .top, spacing: 20) {
-                    readingColumn(title: "室内", reading: latest.indoor.temperature, humidity: latest.indoor.humidity, di: latest.indoorDI, ah: latest.indoorAH)
-                    readingColumn(title: "屋外（札幌）", reading: latest.outdoor.temperature, humidity: latest.outdoor.humidity, di: latest.outdoorDI, ah: latest.outdoorAH)
-                }
-
-                Divider()
-
-                VStack(alignment: .leading, spacing: 4) {
-                    Text("指標の説明").font(.caption).bold()
-                    Text("DI（不快指数）：≤60 快適 / 60-70 やや暑い / >70 不快（判定基準）")
-                        .font(.caption2).foregroundColor(.secondary)
-                    Text("AH（絶対湿度）：実際の水分量(g/m³)。気温が低いほど同じ相対湿度でも値は小さくなる")
-                        .font(.caption2).foregroundColor(.secondary)
-                }
-
-                Text("最終更新: \(formattedDate(latest.updatedAtDate))")
-                    .font(.caption2)
-                    .foregroundColor(.secondary)
-
-                Toggle("ログイン時に自動起動", isOn: launchAtLoginBinding)
+            // 管理系ボタン＋トグル
+            VStack(spacing: 6) {
+                Toggle("自動起動", isOn: launchAtLoginBinding)
                     .font(.caption)
                     .toggleStyle(.switch)
 
-                HStack {
+                HStack(spacing: 4) {
                     Button("再読み込み") { Task { await viewModel.refresh() } }
-                        .font(.caption)
-                    Button("テスト通知を送る") { NotificationService.sendTest() }
-                        .font(.caption)
+                        .font(.caption2)
+                    Button("テスト") { NotificationService.sendTest() }
+                        .font(.caption2)
                     Spacer()
-                    Button("ログアウト") { viewModel.logout() }
-                        .font(.caption)
-                }
-
-                HStack {
-                    Spacer()
-                    Button("アプリを終了") { NSApp.terminate(nil) }
-                        .font(.caption)
-                        .foregroundColor(SystemStatusColor.error)
+                    Menu {
+                        Button("ログアウト") { viewModel.logout() }
+                        Divider()
+                        Button("終了", action: { NSApp.terminate(nil) })
+                            .foregroundColor(SystemStatusColor.error)
+                    } label: {
+                        Text("≡")
+                            .font(.caption)
+                            .frame(width: 24)
+                    }
+                    .menuStyle(.borderlessButton)
                 }
             }
-            .padding(16)
+
         }
-        .frame(width: 340, height: 480)
-        // ポップオーバー標準の半透明・ぼかし背景（壁紙が透けてグラデーションのように
-        // 見える）ではなく、単色の薄い背景にする（2026-07-23、本人の指摘）。
+        .padding(12)
+        .frame(width: 380, height: 580)
         .background(Color.white)
     }
 
