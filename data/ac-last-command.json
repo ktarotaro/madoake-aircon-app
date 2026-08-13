@@ -1,13 +1,17 @@
 {
-  "sentAt": "2026-08-13T12:34:29.828Z",
-  "power": "off",
-  "temperature": null,
-  "mode": null,
-  "modeLabel": "OFF",
-  "fanSpeed": null,
-  "fanSpeedLabel": null,
-  "basedOnJudgment": null,
-  "indoorTemperatureAtCommand": null,
+  "sentAt": "2026-08-13T15:18:26.350Z",
+  "power": "on",
+  "temperature": 26,
+  "mode": 3,
+  "modeLabel": "除湿",
+  "fanSpeed": 2,
+  "fanSpeedLabel": "弱風",
+  "basedOnJudgment": {
+    "judgment": "エアコン（除湿）",
+    "reason": "気温よりも湿気が原因の不快感のため、除湿が有効です。",
+    "updatedAt": "2026-08-13T14:46:14.646Z"
+  },
+  "indoorTemperatureAtCommand": 24.6,
   "note": "赤外線リモコン経由のため、エアコンが実際にこの通り反応したかはAPIでは確認できません。目視で確認してください。",
   "triggeredFrom": "web"
 }
