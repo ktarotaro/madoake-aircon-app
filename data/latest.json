@@ -1,23 +1,23 @@
 {
-  "updatedAt": "2026-08-16T23:30:35.789Z",
+  "updatedAt": "2026-08-16T23:52:11.560Z",
   "indoor": {
-    "temperature": 26.1,
-    "humidity": 63
+    "temperature": 26.4,
+    "humidity": 62
   },
   "outdoor": {
-    "temperature": 26,
-    "humidity": 67,
-    "observedAt": "2026-08-17T08:20:00+09:00"
+    "temperature": 25.9,
+    "humidity": 66,
+    "observedAt": "2026-08-17T08:40:00+09:00"
   },
   "judgment": "エアコン（冷房）",
   "reason": "外気の方が涼しいですが、屋外も蒸し暑く、窓を開けても十分涼しくなりません。",
   "recommendedTemperature": 26,
   "recommendedFanSpeed": "自動",
   "humidityNote": null,
-  "indoorDI": 74.7,
-  "outdoorDI": 75,
+  "indoorDI": 75,
+  "outdoorDI": 74.8,
   "indoorAH": 15.4,
-  "outdoorAH": 16.3,
+  "outdoorAH": 16,
   "acFeedback": null,
   "overcoolingWarning": null
 }
