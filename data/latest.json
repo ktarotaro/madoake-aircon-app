@@ -1,23 +1,23 @@
 {
-  "updatedAt": "2026-08-16T18:54:42.742Z",
+  "updatedAt": "2026-08-16T19:18:14.210Z",
   "indoor": {
-    "temperature": 26,
+    "temperature": 26.1,
     "humidity": 66
   },
   "outdoor": {
-    "temperature": 22.6,
+    "temperature": 22,
     "humidity": 84,
-    "observedAt": "2026-08-17T03:40:00+09:00"
+    "observedAt": "2026-08-17T04:10:00+09:00"
   },
   "judgment": "エアコン（除湿）",
   "reason": "気温よりも湿気が原因の不快感のため、除湿が有効です。",
   "recommendedTemperature": 26,
   "recommendedFanSpeed": "弱風",
   "humidityNote": null,
-  "indoorDI": 74.9,
-  "outdoorDI": 71.4,
+  "indoorDI": 75.1,
+  "outdoorDI": 70.4,
   "indoorAH": 16.1,
-  "outdoorAH": 16.9,
+  "outdoorAH": 16.3,
   "acFeedback": null,
   "overcoolingWarning": null
 }
