@@ -14,7 +14,7 @@ export const MEDIUM_FAN_TEMP_GAP = 2; // 冷房：現在温度と推奨温度の
 export const COOLING_HUMIDITY_SPLIT = 55; // これ以上の湿度なら基本設定温度を1℃下げる
 export const COOLING_BASE_TEMP_LOW_HUMIDITY = 27; // 湿度が低め（55%未満）のときの基本設定温度
 export const COOLING_BASE_TEMP_HIGH_HUMIDITY = 26; // 湿度が高め（55%以上）のときの基本設定温度
-export const HIGH_CO2_THRESHOLD = 1000; // CO2濃度がこれ以上ppmなら換気推奨（2026-08-21、室内環境基準の一般値）
+export const HIGH_CO2_THRESHOLD = 1000; // CO2濃度がこれ以上ppmなら換気推奨（2026-08-19、室内環境基準の一般値）
 
 // 不快指数（DI）: 体感の快適さを判定する指標（暑さ側のみ意味を持つ）
 export function calculateDI(temperature, humidity) {

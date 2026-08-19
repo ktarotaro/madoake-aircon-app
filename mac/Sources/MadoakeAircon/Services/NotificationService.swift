@@ -36,7 +36,7 @@ enum NotificationService {
         }
     }
 
-    // CO2通知（co2Note）の有無が変わったときに通知する（2026-08-21、CO2センサー導入）
+    // CO2通知（co2Note）の有無が変わったときに通知する（2026-08-19、CO2センサー導入）
     static func notifyCo2NoteChanged(from previous: String?, to current: LatestData) {
         guard previous != current.co2Note else { return }
 
