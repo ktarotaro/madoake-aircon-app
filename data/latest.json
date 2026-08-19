@@ -1,26 +1,23 @@
 {
-  "updatedAt": "2026-08-19T02:45:30.060Z",
+  "updatedAt": "2026-08-19T03:32:11.666Z",
   "indoor": {
-    "temperature": 27.8,
-    "humidity": 66
+    "temperature": 26.9,
+    "humidity": 63
   },
   "outdoor": {
     "temperature": 23.5,
-    "humidity": 92,
-    "observedAt": "2026-08-19T11:30:00+09:00"
+    "humidity": 93,
+    "observedAt": "2026-08-19T12:20:00+09:00"
   },
-  "judgment": "エアコン（除湿）",
+  "judgment": "エアコン（冷房）",
   "reason": "雨天のため換気非推奨です。",
   "recommendedTemperature": 26,
-  "recommendedFanSpeed": "弱風",
+  "recommendedFanSpeed": "自動",
   "humidityNote": null,
-  "indoorDI": 77.5,
-  "outdoorDI": 73.6,
-  "indoorAH": 17.7,
-  "outdoorAH": 19.4,
-  "acFeedback": {
-    "status": "warning",
-    "message": "除湿に反応していない可能性があります。ご確認ください（送信時からの変化：0.3℃）。"
-  },
+  "indoorDI": 75.9,
+  "outdoorDI": 73.7,
+  "indoorAH": 16.1,
+  "outdoorAH": 19.6,
+  "acFeedback": null,
   "overcoolingWarning": null
 }
