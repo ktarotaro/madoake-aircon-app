@@ -36,6 +36,17 @@ enum NotificationService {
         }
     }
 
+    // CO2通知（co2Note）の有無が変わったときに通知する（2026-08-21、CO2センサー導入）
+    static func notifyCo2NoteChanged(from previous: String?, to current: LatestData) {
+        guard previous != current.co2Note else { return }
+
+        if let note = current.co2Note {
+            send(title: "換気推奨", body: note)
+        } else if previous != nil {
+            send(title: "換気推奨は解消しました", body: "室内のCO2濃度が正常に戻りました。")
+        }
+    }
+
     // 冷えすぎ警告（overcoolingWarning）が新たに出たときのみ通知する（解消時は通知しない。Web版と同じ非対称設計）
     static func notifyOvercoolingChanged(from previous: String?, to current: LatestData) {
         guard previous != current.overcoolingWarning, let warning = current.overcoolingWarning else { return }

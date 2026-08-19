@@ -136,6 +136,12 @@ struct ContentView: View {
                             .foregroundColor(SystemStatusColor.warning)
                     }
 
+                    if let note = latest.co2Note {
+                        Text("💨 \(note)")
+                            .font(.caption)
+                            .foregroundColor(SystemStatusColor.warning)
+                    }
+
                     confirmationRow(latest)
 
                     if let result = viewModel.actionResultMessage {

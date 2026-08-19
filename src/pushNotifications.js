@@ -1,7 +1,7 @@
 import webpush from "web-push";
 import { config } from "./config.js";
 
-// data/latest.json の judgment / humidityNote が変化した場合に、登録済みの
+// data/latest.json の judgment / humidityNote / co2Note が変化した場合に、登録済みの
 // ブラウザ購読先（data/push-subscriptions.json）へWeb Pushを送る。
 // 送信できなかった購読先（410 Gone等、ブラウザ側で解除済み）は戻り値の
 // deadEndpointsに含めて返す。呼び出し元がpush-subscriptions.jsonから除去する。
@@ -42,6 +42,16 @@ export function buildNotificationMessages(previous, current) {
       messages.push({ title: "乾燥注意", body: currentNote });
     } else if (previousNote) {
       messages.push({ title: "乾燥注意は解消しました", body: "室内の湿度が回復しました。" });
+    }
+  }
+
+  const previousCo2Note = previous?.co2Note ?? null;
+  const currentCo2Note = current.co2Note ?? null;
+  if (previousCo2Note !== currentCo2Note) {
+    if (currentCo2Note) {
+      messages.push({ title: "換気推奨", body: currentCo2Note });
+    } else if (previousCo2Note) {
+      messages.push({ title: "換気推奨は解消しました", body: "室内のCO2濃度が正常に戻りました。" });
     }
   }
 

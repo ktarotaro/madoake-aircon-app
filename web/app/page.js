@@ -42,6 +42,7 @@ export default async function Home() {
     recommendedTemperature,
     recommendedFanSpeed,
     humidityNote,
+    co2Note,
     indoor,
     outdoor,
     indoorDI,
@@ -66,6 +67,7 @@ export default async function Home() {
         <p>推奨風量: <strong>{recommendedFanSpeed}</strong></p>
       )}
       {humidityNote && <p style={{ color: accessibleColors.warning }}>⚠ {humidityNote}</p>}
+      {co2Note && <p style={{ color: accessibleColors.warning }}>💨 {co2Note}</p>}
 
       <AcControls
         judgment={judgment}

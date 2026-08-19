@@ -34,6 +34,26 @@ export async function getMeterStatus({ token, secret, deviceId }) {
   };
 }
 
+// CO2センサー（MeterPro(CO2)）の現在値を取得する。戻り値: { temperature, humidity, co2 }
+// APIのレスポンスではCO2濃度が大文字の "CO2" キーで返る（2026-08-17、実機で確認）。
+export async function getCo2MeterStatus({ token, secret, deviceId }) {
+  const res = await fetch(`${API_BASE}/devices/${deviceId}/status`, {
+    method: "GET",
+    headers: buildAuthHeaders(token, secret),
+  });
+  const body = await res.json();
+
+  if (body.statusCode !== 100) {
+    throw new Error(`SwitchBot APIエラー: ${JSON.stringify(body)}`);
+  }
+
+  return {
+    temperature: body.body.temperature,
+    humidity: body.body.humidity,
+    co2: body.body.CO2,
+  };
+}
+
 export const AC_MODE = { AUTO: 1, COOL: 2, DRY: 3, FAN: 4, HEAT: 5 };
 export const AC_FAN_SPEED = { AUTO: 1, LOW: 2, MEDIUM: 3, HIGH: 4 };
 

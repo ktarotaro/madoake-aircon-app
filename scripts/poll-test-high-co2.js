@@ -1,5 +1,7 @@
+// テスト用: CO2を高い値（1500 ppm）でシミュレートし、通知機能を確認するスクリプト
+
 import { mkdir, readFile, writeFile } from "node:fs/promises";
-import { getMeterStatus, getCo2MeterStatus } from "../src/switchbotClient.js";
+import { getMeterStatus } from "../src/switchbotClient.js";
 import { getAmedasStatus } from "../src/weatherClient.js";
 import { decide } from "../src/logic.js";
 import { evaluateAcFeedback, evaluateOvercooling } from "../src/acFeedback.js";
@@ -15,8 +17,8 @@ if (!token || !secret) {
 }
 
 const indoorRaw = await getMeterStatus({ token, secret, deviceId: config.switchbotDeviceId });
-const co2Raw = await getCo2MeterStatus({ token, secret, deviceId: config.switchbotCo2DeviceId });
-const indoor = { ...indoorRaw, co2: co2Raw.co2 };
+// *** テスト用: CO2を1500 ppmに上書き ***
+const indoor = { ...indoorRaw, co2: 1500 };
 const outdoorRaw = await getAmedasStatus({ stationId: config.amedasStationId });
 
 const outdoor = { temperature: outdoorRaw.temperature, humidity: outdoorRaw.humidity };
@@ -32,7 +34,7 @@ let commandRecord = null;
 try {
   commandRecord = JSON.parse(await readFile("data/ac-last-command.json", "utf8"));
 } catch {
-  // まだ一度もエアコンを操作していない場合はファイルが存在しない。無視してよい。
+  // 初回実行時はファイルが存在しない。無視してよい。
 }
 
 let previous = null;
@@ -59,7 +61,6 @@ await writeFile("data/latest.json", JSON.stringify(output, null, 2) + "\n");
 
 console.log(JSON.stringify(output, null, 2));
 
-// 判定・乾燥注意が変化していれば、購読中のブラウザへWeb Pushで通知する
 const vapidPrivateKey = process.env.VAPID_PRIVATE_KEY;
 const messages = buildNotificationMessages(previous, output);
 
@@ -94,3 +95,7 @@ if (messages.length > 0 && vapidPrivateKey) {
 } else if (messages.length > 0 && !vapidPrivateKey) {
   console.log("VAPID_PRIVATE_KEYが未設定のため、プッシュ通知はスキップしました。");
 }
+
+console.log("\n=== テスト実行完了 ===");
+console.log(`生成されたco2Note: ${output.co2Note ?? "なし"}`);
+console.log(`通知が発火: ${messages.some((m) => m.title.includes("換気")) ? "はい" : "いいえ"}`);

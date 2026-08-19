@@ -63,11 +63,13 @@ final class AppViewModel: ObservableObject {
         do {
             let previousJudgment = latest?.judgment
             let previousHumidityNote = latest?.humidityNote
+            let previousCo2Note = latest?.co2Note
             let previousOvercoolingWarning = latest?.overcoolingWarning
             let newLatest = try await api.fetchLatest()
             latest = newLatest
             NotificationService.notifyJudgmentChanged(from: previousJudgment, to: newLatest)
             NotificationService.notifyHumidityNoteChanged(from: previousHumidityNote, to: newLatest)
+            NotificationService.notifyCo2NoteChanged(from: previousCo2Note, to: newLatest)
             NotificationService.notifyOvercoolingChanged(from: previousOvercoolingWarning, to: newLatest)
         } catch {
             errorMessage = (error as? VercelAPIError)?.errorDescription ?? error.localizedDescription
