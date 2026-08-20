@@ -169,11 +169,18 @@ struct ContentView: View {
                         readingColumn(title: "屋外", reading: latest.outdoor.temperature, humidity: latest.outdoor.humidity, di: latest.outdoorDI, ah: latest.outdoorAH)
                     }
 
+                    if let co2 = latest.indoor.co2 {
+                        Divider()
+                        co2Section(co2: co2, level: latest.co2Level)
+                    }
+
                     Divider()
 
                     VStack(alignment: .leading, spacing: 2) {
                         Text("指標の説明").font(.caption2).bold()
                         Text("DI：≤60 快適 / 60-70 やや暑い / >70 不快")
+                            .font(.caption2).foregroundColor(.secondary)
+                        Text("CO2：400-1000 良好 / 1000-1400 注意 / 1400- 要換気")
                             .font(.caption2).foregroundColor(.secondary)
                     }
 
@@ -213,6 +220,46 @@ struct ContentView: View {
         .padding(12)
         .frame(width: 380, height: 580)
         .background(Color.white)
+    }
+
+    // CO2濃度の実測値と、区分・影響の説明を表示する（2026-08-20追加）。
+    // 区分の色はCO2センサー本体のLED（緑/黄/赤）と合わせているが、白背景で読めるよう
+    // 他の表示と同じくシステムカラーを暗くしたものを使う（黄はsystemOrange系のwarningで代用）。
+    private func co2Section(co2: Int, level: LatestData.Co2Level?) -> some View {
+        VStack(alignment: .leading, spacing: 3) {
+            HStack(alignment: .firstTextBaseline, spacing: 6) {
+                Text("CO2濃度").font(.caption).foregroundColor(.secondary)
+                Text("\(co2) ppm")
+                    .font(.callout)
+                    .bold()
+                    .foregroundColor(co2Color(level?.color))
+                if let level {
+                    Text(level.level)
+                        .font(.caption2)
+                        .bold()
+                        .foregroundColor(.white)
+                        .padding(.horizontal, 6)
+                        .padding(.vertical, 2)
+                        .background(co2Color(level.color))
+                        .cornerRadius(4)
+                }
+            }
+            if let level {
+                Text(level.description)
+                    .font(.caption2)
+                    .foregroundColor(.secondary)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+        }
+    }
+
+    private func co2Color(_ color: String?) -> Color {
+        switch color {
+        case "green": return SystemStatusColor.success
+        case "yellow": return SystemStatusColor.warning
+        case "red": return SystemStatusColor.error
+        default: return .secondary
+        }
     }
 
     private func readingColumn(title: String, reading: Double, humidity: Double, di: Double, ah: Double) -> some View {

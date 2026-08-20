@@ -25,6 +25,13 @@ const feedbackColor = {
   checking: accessibleColors.secondary,
 };
 
+// CO2の区分色（センサー本体のLEDの緑/黄/赤に対応。黄は白背景で読めるようwarning=橙系で代用）
+const co2Colors = {
+  green: accessibleColors.success,
+  yellow: accessibleColors.warning,
+  red: accessibleColors.error,
+};
+
 export default async function Home() {
   const latest = await getLatest();
 
@@ -52,6 +59,7 @@ export default async function Home() {
     updatedAt,
     acFeedback,
     overcoolingWarning,
+    co2Level,
   } = latest;
 
   return (
@@ -103,6 +111,37 @@ export default async function Home() {
         </div>
       </section>
 
+      {indoor.co2 != null && (
+        <>
+          <hr style={{ margin: "16px 0", borderColor: "#eee" }} />
+          <section>
+            <h2 style={{ fontSize: 14, color: accessibleColors.secondary, marginBottom: 6 }}>室内CO2濃度</h2>
+            <p style={{ display: "flex", alignItems: "baseline", gap: 8, margin: 0 }}>
+              <strong style={{ fontSize: 20, color: co2Colors[co2Level?.color] ?? accessibleColors.primary }}>
+                {indoor.co2} ppm
+              </strong>
+              {co2Level && (
+                <span
+                  style={{
+                    fontSize: 12,
+                    fontWeight: "bold",
+                    color: "#fff",
+                    backgroundColor: co2Colors[co2Level.color] ?? accessibleColors.secondary,
+                    padding: "2px 8px",
+                    borderRadius: 4,
+                  }}
+                >
+                  {co2Level.level}
+                </span>
+              )}
+            </p>
+            {co2Level && (
+              <p style={{ fontSize: 13, color: accessibleColors.secondary, marginTop: 6 }}>{co2Level.description}</p>
+            )}
+          </section>
+        </>
+      )}
+
       <hr style={{ margin: "16px 0", borderColor: "#eee" }} />
 
       <section style={{ fontSize: 12, color: accessibleColors.secondary, lineHeight: 1.6 }}>
@@ -113,8 +152,14 @@ export default async function Home() {
         <p style={{ fontSize: 11, color: accessibleColors.secondary, marginLeft: 12, marginBottom: 12 }}>
           ≤60: 快適 / 60-70: やや暑い / &gt;70: 不快（このアプリは70が判定基準）
         </p>
-        <p>
+        <p style={{ marginBottom: 6 }}>
           <strong>AH（絶対湿度）</strong>：実際に空気に含まれている水分量（g/m³）。相対湿度が同じでも気温が低いほど絶対湿度は低くなります。
+        </p>
+        <p style={{ marginTop: 12, marginBottom: 6 }}>
+          <strong>CO2濃度</strong>：室内の空気の淀み具合（CO2センサー付属マニュアルの基準に準拠）
+        </p>
+        <p style={{ fontSize: 11, color: accessibleColors.secondary, marginLeft: 12 }}>
+          400-1000: 良好（換気の良い居住空間の一般的なレベル） / 1000-1400: 注意（十分でない酸素濃度で、眠く不快なレベル） / 1400以上: 要換気（すぐに換気が必要）
         </p>
       </section>
 

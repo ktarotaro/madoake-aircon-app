@@ -16,10 +16,19 @@ struct LatestData: Codable {
     let outdoorAH: Double
     let acFeedback: AcFeedback?
     let overcoolingWarning: String?
+    let co2Level: Co2Level?
 
     struct Reading: Codable {
         let temperature: Double
         let humidity: Double
+        let co2: Int?
+    }
+
+    // CO2濃度の区分（CO2センサー付属マニュアルの基準表に準拠、2026-08-20追加）
+    struct Co2Level: Codable {
+        let level: String
+        let color: String
+        let description: String
     }
 
     struct OutdoorReading: Codable {

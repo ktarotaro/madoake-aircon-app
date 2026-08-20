@@ -14,7 +14,23 @@ export const MEDIUM_FAN_TEMP_GAP = 2; // 冷房：現在温度と推奨温度の
 export const COOLING_HUMIDITY_SPLIT = 55; // これ以上の湿度なら基本設定温度を1℃下げる
 export const COOLING_BASE_TEMP_LOW_HUMIDITY = 27; // 湿度が低め（55%未満）のときの基本設定温度
 export const COOLING_BASE_TEMP_HIGH_HUMIDITY = 26; // 湿度が高め（55%以上）のときの基本設定温度
-export const HIGH_CO2_THRESHOLD = 1000; // CO2濃度がこれ以上ppmなら換気推奨（2026-08-19、室内環境基準の一般値）
+// CO2濃度の区分（2026-08-20、SwitchBot CO2センサー`W4900010`の付属マニュアル記載の基準表に準拠）。
+// 本体LEDの色分けと同じ区切りにすることで、アプリの表示と実機の見た目が食い違わないようにしている。
+export const HIGH_CO2_THRESHOLD = 1000; // これを超えると「注意」（換気推奨の通知もこの閾値で出す）
+export const VENTILATION_REQUIRED_CO2_THRESHOLD = 1400; // これを超えると「要換気」
+
+// CO2濃度から区分・色・影響の説明を返す。co2が未取得（undefined/null）ならnull。
+export function evaluateCo2Level(co2) {
+  if (co2 === undefined || co2 === null) return null;
+
+  if (co2 > VENTILATION_REQUIRED_CO2_THRESHOLD) {
+    return { level: "要換気", color: "red", description: "すぐに換気が必要です。" };
+  }
+  if (co2 > HIGH_CO2_THRESHOLD) {
+    return { level: "注意", color: "yellow", description: "十分でない酸素濃度で、眠く不快なレベルです。" };
+  }
+  return { level: "良好", color: "green", description: "換気の良い居住空間の一般的なレベルです。" };
+}
 
 // 不快指数（DI）: 体感の快適さを判定する指標（暑さ側のみ意味を持つ）
 export function calculateDI(temperature, humidity) {
@@ -64,6 +80,7 @@ export function decide({ indoor, outdoor, precipitation10m, alpha = DEFAULT_ALPH
     outdoorDI: round1(outdoorDI),
     indoorAH: round1(indoorAH),
     outdoorAH: round1(outdoorAH),
+    co2Level: evaluateCo2Level(indoor.co2),
   };
 
   const humidityNote =
