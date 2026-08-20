@@ -1,33 +1,33 @@
 {
-  "updatedAt": "2026-08-20T03:54:56.531Z",
+  "updatedAt": "2026-08-20T04:32:54.673Z",
   "indoor": {
-    "temperature": 29.2,
-    "humidity": 64,
-    "co2": 409
+    "temperature": 27.8,
+    "humidity": 59,
+    "co2": 504
   },
   "outdoor": {
-    "temperature": 28.2,
-    "humidity": 74,
-    "observedAt": "2026-08-20T12:40:00+09:00"
+    "temperature": 27.5,
+    "humidity": 76,
+    "observedAt": "2026-08-20T13:20:00+09:00"
   },
   "judgment": "エアコン（冷房）",
-  "reason": "外気の方が涼しいですが、屋外も蒸し暑く、窓を開けても十分涼しくなりません。",
+  "reason": "外気を入れると余計蒸し暑くなります。",
   "recommendedTemperature": 26,
-  "recommendedFanSpeed": "中風",
+  "recommendedFanSpeed": "自動",
   "humidityNote": null,
   "co2Note": null,
-  "indoorDI": 79.3,
-  "outdoorDI": 79.2,
-  "indoorAH": 18.6,
-  "outdoorAH": 20.3,
+  "indoorDI": 76.6,
+  "outdoorDI": 78.4,
+  "indoorAH": 15.9,
+  "outdoorAH": 20.1,
   "co2Level": {
     "level": "良好",
     "color": "green",
     "description": "換気の良い居住空間の一般的なレベルです。"
   },
   "acFeedback": {
-    "status": "checking",
-    "message": "エアコンへの反応を確認中です（送信から2分経過）。"
+    "status": "ok",
+    "message": "冷房に反応している可能性が高いです（送信時より1.2℃低下）。"
   },
   "overcoolingWarning": null
 }
