@@ -180,7 +180,7 @@ struct ContentView: View {
                         Text("指標の説明").font(.caption2).bold()
                         Text("DI：≤60 快適 / 60-70 やや暑い / >70 不快")
                             .font(.caption2).foregroundColor(.secondary)
-                        Text("快適さ：18℃未満 寒い / DI>70 暑い / それ以外 快適")
+                        Text("快適さ：18℃未満 寒い / DI>75 暑い / それ以外 快適")
                             .font(.caption2).foregroundColor(.secondary)
                         Text("CO2：400-1000 良好 / 1000-1400 注意 / 1400- 要換気")
                             .font(.caption2).foregroundColor(.secondary)

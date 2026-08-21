@@ -176,7 +176,7 @@ export default async function Home() {
           <strong>快適さ</strong>：室内の温度・湿度から判定（窓開け/エアコンの判定基準と同じ境界を使用）
         </p>
         <p style={{ fontSize: 11, color: accessibleColors.secondary, marginLeft: 12, marginBottom: 12 }}>
-          18℃未満: 寒い / DI&gt;70: 暑い / それ以外: 快適
+          18℃未満: 寒い / DI&gt;75: 暑い / それ以外: 快適
         </p>
         <p style={{ marginTop: 12, marginBottom: 6 }}>
           <strong>CO2濃度</strong>：室内の空気の淀み具合（CO2センサー付属マニュアルの基準に準拠）

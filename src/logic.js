@@ -32,13 +32,18 @@ export function evaluateCo2Level(co2) {
   return { level: "良好", color: "green", description: "換気の良い居住空間の一般的なレベルです。" };
 }
 
+// 快適さ判定でのみ使う、体感寄りの「暑い」境界（2026-08-21）。decide()の判定基準
+// COMFORTABLE_DI_THRESHOLD（70）とは意図的に別値。DI70は伝統的な不快指数の区分でも
+// 「暑くない」の範囲であり、体感的な「快適」の目安としては厳しすぎる（本人指摘を受け、
+// DI71〜75では「エアコン推奨だが快適さアイコンは快適」という状態を許容する方針で決定）。
+// なお70〜75も「暑くない」区分のため、75超で「やや暑い」に切り替わる伝統的な区分に準拠。
+export const COMFORT_DI_THRESHOLD = 75;
+
 // 室内の温度・湿度から快適さを区分・色・説明で返す（2026-08-21追加）。
-// 新しい閾値は設けず、既存の判定ロジック（decide()）が実際に使っている境界
-// （COLD_TEMP_THRESHOLD・COMFORTABLE_DI_THRESHOLD）とそのまま一致させている。
-// DI60〜70の「やや暑い」中間区分は当初検討したが不採用にした：calculateDI()は夏を
-// 想定した式（気象庁の不快指数）で、低温・低湿度の環境でも高いDI値が出てしまう
-// （例: 20℃/30%でDI64.15）。60を境界に使うと「明らかに快適な環境」を「やや暑い」と
-// 誤判定するため、decide()が実際に使う唯一の境界である70のみを採用した。
+// 寒さ側はdecide()と同じCOLD_TEMP_THRESHOLDを使うが、暑さ側は上記COMFORT_DI_THRESHOLD
+// （体感寄りの75）を使う。decide()自体はCOMFORTABLE_DI_THRESHOLD（70）で判定するため、
+// 「判定はエアコン推奨だが快適さアイコンは快適」という乖離がDI71〜75の範囲で起こり得るが、
+// 目的が違う指標（判定は保守的に早めの対処を促す、快適さ表示は体感に忠実）と割り切っている。
 export function evaluateComfortLevel(temperature, humidity) {
   if (temperature === undefined || temperature === null || humidity === undefined || humidity === null) {
     return null;
@@ -50,7 +55,7 @@ export function evaluateComfortLevel(temperature, humidity) {
 
   const di = calculateDI(temperature, humidity);
 
-  if (di > COMFORTABLE_DI_THRESHOLD) {
+  if (di > COMFORT_DI_THRESHOLD) {
     return { level: "暑い", color: "red", description: "気温・湿度が高く、蒸し暑く感じるレベルです。" };
   }
   return { level: "快適", color: "green", description: "気温・湿度ともに快適なレベルです。" };
