@@ -165,8 +165,8 @@ struct ContentView: View {
                     Divider()
 
                     HStack(alignment: .top, spacing: 12) {
-                        readingColumn(title: "室内", reading: latest.indoor.temperature, humidity: latest.indoor.humidity, di: latest.indoorDI, ah: latest.indoorAH)
-                        readingColumn(title: "屋外", reading: latest.outdoor.temperature, humidity: latest.outdoor.humidity, di: latest.outdoorDI, ah: latest.outdoorAH)
+                        readingColumn(title: "室内", reading: latest.indoor.temperature, humidity: latest.indoor.humidity, di: latest.indoorDI, ah: latest.indoorAH, comfortLevel: latest.comfortLevel)
+                        readingColumn(title: "屋外", reading: latest.outdoor.temperature, humidity: latest.outdoor.humidity, di: latest.outdoorDI, ah: latest.outdoorAH, comfortLevel: nil)
                     }
 
                     if let co2 = latest.indoor.co2 {
@@ -179,6 +179,8 @@ struct ContentView: View {
                     VStack(alignment: .leading, spacing: 2) {
                         Text("指標の説明").font(.caption2).bold()
                         Text("DI：≤60 快適 / 60-70 やや暑い / >70 不快")
+                            .font(.caption2).foregroundColor(.secondary)
+                        Text("快適さ：18℃未満 寒い / DI>70 暑い / それ以外 快適")
                             .font(.caption2).foregroundColor(.secondary)
                         Text("CO2：400-1000 良好 / 1000-1400 注意 / 1400- 要換気")
                             .font(.caption2).foregroundColor(.secondary)
@@ -262,9 +264,22 @@ struct ContentView: View {
         }
     }
 
-    private func readingColumn(title: String, reading: Double, humidity: Double, di: Double, ah: Double) -> some View {
+    // 室内外の実測値の列。comfortLevelを渡した場合のみ快適さバッジを表示する（2026-08-21追加、室内のみ）。
+    private func readingColumn(title: String, reading: Double, humidity: Double, di: Double, ah: Double, comfortLevel: LatestData.ComfortLevel?) -> some View {
         VStack(alignment: .leading, spacing: 2) {
-            Text(title).font(.caption).foregroundColor(.secondary)
+            HStack(spacing: 6) {
+                Text(title).font(.caption).foregroundColor(.secondary)
+                if let comfortLevel {
+                    Text(comfortLevel.level)
+                        .font(.caption2)
+                        .bold()
+                        .foregroundColor(.white)
+                        .padding(.horizontal, 5)
+                        .padding(.vertical, 1)
+                        .background(co2Color(comfortLevel.color))
+                        .cornerRadius(3)
+                }
+            }
             Text("\(reading, specifier: "%.1f")℃ / \(humidity, specifier: "%.0f")%")
                 .font(.callout)
             Text("DI: \(di, specifier: "%.1f")").font(.caption2).foregroundColor(.secondary)

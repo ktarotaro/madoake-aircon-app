@@ -32,6 +32,30 @@ export function evaluateCo2Level(co2) {
   return { level: "良好", color: "green", description: "換気の良い居住空間の一般的なレベルです。" };
 }
 
+// 室内の温度・湿度から快適さを区分・色・説明で返す（2026-08-21追加）。
+// 新しい閾値は設けず、既存の判定ロジック（decide()）が実際に使っている境界
+// （COLD_TEMP_THRESHOLD・COMFORTABLE_DI_THRESHOLD）とそのまま一致させている。
+// DI60〜70の「やや暑い」中間区分は当初検討したが不採用にした：calculateDI()は夏を
+// 想定した式（気象庁の不快指数）で、低温・低湿度の環境でも高いDI値が出てしまう
+// （例: 20℃/30%でDI64.15）。60を境界に使うと「明らかに快適な環境」を「やや暑い」と
+// 誤判定するため、decide()が実際に使う唯一の境界である70のみを採用した。
+export function evaluateComfortLevel(temperature, humidity) {
+  if (temperature === undefined || temperature === null || humidity === undefined || humidity === null) {
+    return null;
+  }
+
+  if (temperature < COLD_TEMP_THRESHOLD) {
+    return { level: "寒い", color: "red", description: "室温が低く、寒く感じるレベルです。" };
+  }
+
+  const di = calculateDI(temperature, humidity);
+
+  if (di > COMFORTABLE_DI_THRESHOLD) {
+    return { level: "暑い", color: "red", description: "気温・湿度が高く、蒸し暑く感じるレベルです。" };
+  }
+  return { level: "快適", color: "green", description: "気温・湿度ともに快適なレベルです。" };
+}
+
 // 不快指数（DI）: 体感の快適さを判定する指標（暑さ側のみ意味を持つ）
 export function calculateDI(temperature, humidity) {
   return 0.81 * temperature + 0.01 * humidity * (0.99 * temperature - 14.3) + 46.3;
@@ -81,6 +105,7 @@ export function decide({ indoor, outdoor, precipitation10m, alpha = DEFAULT_ALPH
     indoorAH: round1(indoorAH),
     outdoorAH: round1(outdoorAH),
     co2Level: evaluateCo2Level(indoor.co2),
+    comfortLevel: evaluateComfortLevel(indoor.temperature, indoor.humidity),
   };
 
   const humidityNote =

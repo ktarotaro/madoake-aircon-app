@@ -17,6 +17,7 @@ struct LatestData: Codable {
     let acFeedback: AcFeedback?
     let overcoolingWarning: String?
     let co2Level: Co2Level?
+    let comfortLevel: ComfortLevel?
 
     struct Reading: Codable {
         let temperature: Double
@@ -26,6 +27,13 @@ struct LatestData: Codable {
 
     // CO2濃度の区分（CO2センサー付属マニュアルの基準表に準拠、2026-08-20追加）
     struct Co2Level: Codable {
+        let level: String
+        let color: String
+        let description: String
+    }
+
+    // 室内の快適さの区分（2026-08-21追加。既存のdecide()の判定境界（DI>70・18℃未満）と一致させている）
+    struct ComfortLevel: Codable {
         let level: String
         let color: String
         let description: String
