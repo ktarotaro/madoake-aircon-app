@@ -1,7 +1,7 @@
 // テスト用: CO2を高い値（1500 ppm）でシミュレートし、通知機能を確認するスクリプト
 
 import { mkdir, readFile, writeFile } from "node:fs/promises";
-import { getMeterStatus } from "../src/switchbotClient.js";
+import { getCo2MeterStatus } from "../src/switchbotClient.js";
 import { getAmedasStatus } from "../src/weatherClient.js";
 import { decide } from "../src/logic.js";
 import { evaluateAcFeedback, evaluateOvercooling } from "../src/acFeedback.js";
@@ -16,7 +16,7 @@ if (!token || !secret) {
   process.exit(1);
 }
 
-const indoorRaw = await getMeterStatus({ token, secret, deviceId: config.switchbotDeviceId });
+const indoorRaw = await getCo2MeterStatus({ token, secret, deviceId: config.switchbotCo2DeviceId });
 // *** テスト用: CO2を1500 ppmに上書き ***
 const indoor = { ...indoorRaw, co2: 1500 };
 const outdoorRaw = await getAmedasStatus({ stationId: config.amedasStationId });

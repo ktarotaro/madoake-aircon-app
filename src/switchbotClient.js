@@ -16,23 +16,8 @@ function buildAuthHeaders(token, secret) {
   };
 }
 
-// 温湿度計（Meter）の現在値を取得する。戻り値: { temperature: number, humidity: number }
-export async function getMeterStatus({ token, secret, deviceId }) {
-  const res = await fetch(`${API_BASE}/devices/${deviceId}/status`, {
-    method: "GET",
-    headers: buildAuthHeaders(token, secret),
-  });
-  const body = await res.json();
-
-  if (body.statusCode !== 100) {
-    throw new Error(`SwitchBot APIエラー: ${JSON.stringify(body)}`);
-  }
-
-  return {
-    temperature: body.body.temperature,
-    humidity: body.body.humidity,
-  };
-}
+// 旧・温湿度計（Meter）用の getMeterStatus は、室内データの取得元をCO2センサーに
+// 一本化したため2026-08-21に削除した（復元が必要ならgit履歴を参照）。
 
 // CO2センサー（MeterPro(CO2)）の現在値を取得する。戻り値: { temperature, humidity, co2 }
 // APIのレスポンスではCO2濃度が大文字の "CO2" キーで返る（2026-08-17、実機で確認）。

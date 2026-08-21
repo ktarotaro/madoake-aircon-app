@@ -1,5 +1,5 @@
 import { mkdir, readFile, writeFile } from "node:fs/promises";
-import { getMeterStatus, getCo2MeterStatus } from "../src/switchbotClient.js";
+import { getCo2MeterStatus } from "../src/switchbotClient.js";
 import { getAmedasStatus } from "../src/weatherClient.js";
 import { decide } from "../src/logic.js";
 import { evaluateAcFeedback, evaluateOvercooling } from "../src/acFeedback.js";
@@ -14,9 +14,9 @@ if (!token || !secret) {
   process.exit(1);
 }
 
-const indoorRaw = await getMeterStatus({ token, secret, deviceId: config.switchbotDeviceId });
-const co2Raw = await getCo2MeterStatus({ token, secret, deviceId: config.switchbotCo2DeviceId });
-const indoor = { ...indoorRaw, co2: co2Raw.co2 };
+// 室内の温度・湿度・CO2はすべてCO2センサー（W4900010）から取得する。
+// 旧・温湿度計（SWITCHBOTMETER-GH）は2026-08-21に運用終了（CO2センサーが温湿度も測れるため）。
+const indoor = await getCo2MeterStatus({ token, secret, deviceId: config.switchbotCo2DeviceId });
 const outdoorRaw = await getAmedasStatus({ stationId: config.amedasStationId });
 
 const outdoor = { temperature: outdoorRaw.temperature, humidity: outdoorRaw.humidity };
