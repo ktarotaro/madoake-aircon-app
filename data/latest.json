@@ -1,14 +1,14 @@
 {
-  "updatedAt": "2026-08-23T14:08:58.829Z",
+  "updatedAt": "2026-08-23T14:36:23.985Z",
   "indoor": {
     "temperature": 27.1,
     "humidity": 60,
-    "co2": 435
+    "co2": 472
   },
   "outdoor": {
     "temperature": 23.2,
     "humidity": 80,
-    "observedAt": "2026-08-23T23:00:00+09:00"
+    "observedAt": "2026-08-23T23:20:00+09:00"
   },
   "judgment": "エアコン（冷房）",
   "reason": "外気の方が涼しいですが、屋外も蒸し暑く、窓を開けても十分涼しくなりません。",
