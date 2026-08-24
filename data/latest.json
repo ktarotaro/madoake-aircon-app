@@ -1,25 +1,25 @@
 {
-  "updatedAt": "2026-08-24T09:30:53.504Z",
+  "updatedAt": "2026-08-24T10:20:27.364Z",
   "indoor": {
-    "temperature": 28.5,
-    "humidity": 54,
-    "co2": 753
+    "temperature": 29.3,
+    "humidity": 56,
+    "co2": 809
   },
   "outdoor": {
-    "temperature": 26.7,
-    "humidity": 84,
-    "observedAt": "2026-08-24T18:20:00+09:00"
+    "temperature": 26.6,
+    "humidity": 86,
+    "observedAt": "2026-08-24T19:10:00+09:00"
   },
   "judgment": "エアコン（冷房）",
   "reason": "外気を入れると余計蒸し暑くなります。",
-  "recommendedTemperature": 27,
-  "recommendedFanSpeed": "自動",
+  "recommendedTemperature": 26,
+  "recommendedFanSpeed": "中風",
   "humidityNote": null,
   "co2Note": null,
-  "indoorDI": 76.9,
-  "outdoorDI": 78.1,
-  "indoorAH": 15.1,
-  "outdoorAH": 21.2,
+  "indoorDI": 78.3,
+  "outdoorDI": 78.2,
+  "indoorAH": 16.3,
+  "outdoorAH": 21.6,
   "co2Level": {
     "level": "良好",
     "color": "green",
