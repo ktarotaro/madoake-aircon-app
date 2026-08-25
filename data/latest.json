@@ -1,14 +1,14 @@
 {
-  "updatedAt": "2026-08-25T00:01:01.859Z",
+  "updatedAt": "2026-08-25T01:48:36.020Z",
   "indoor": {
-    "temperature": 27.7,
-    "humidity": 51,
-    "co2": 740
+    "temperature": 28,
+    "humidity": 50,
+    "co2": 799
   },
   "outdoor": {
-    "temperature": 21.5,
-    "humidity": 97,
-    "observedAt": "2026-08-25T08:50:00+09:00"
+    "temperature": 21.4,
+    "humidity": 98,
+    "observedAt": "2026-08-25T10:40:00+09:00"
   },
   "judgment": "エアコン（冷房）",
   "reason": "雨天のため換気非推奨です。",
@@ -16,10 +16,10 @@
   "recommendedFanSpeed": "自動",
   "humidityNote": null,
   "co2Note": null,
-  "indoorDI": 75.4,
-  "outdoorDI": 70.5,
+  "indoorDI": 75.7,
+  "outdoorDI": 70.4,
   "indoorAH": 13.6,
-  "outdoorAH": 18.3,
+  "outdoorAH": 18.4,
   "co2Level": {
     "level": "良好",
     "color": "green",
