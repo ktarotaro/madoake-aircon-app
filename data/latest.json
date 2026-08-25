@@ -1,14 +1,14 @@
 {
-  "updatedAt": "2026-08-25T05:43:04.212Z",
+  "updatedAt": "2026-08-25T06:18:17.817Z",
   "indoor": {
-    "temperature": 29.3,
-    "humidity": 58,
-    "co2": 698
+    "temperature": 29.4,
+    "humidity": 57,
+    "co2": 743
   },
   "outdoor": {
-    "temperature": 23.1,
-    "humidity": 86,
-    "observedAt": "2026-08-25T14:30:00+09:00"
+    "temperature": 23.8,
+    "humidity": 83,
+    "observedAt": "2026-08-25T15:10:00+09:00"
   },
   "judgment": "エアコン（冷房）",
   "reason": "外気の方が涼しいですが、屋外も蒸し暑く、窓を開けても十分涼しくなりません。",
@@ -17,8 +17,8 @@
   "humidityNote": null,
   "co2Note": null,
   "indoorDI": 78.6,
-  "outdoorDI": 72.4,
-  "indoorAH": 16.9,
+  "outdoorDI": 73.3,
+  "indoorAH": 16.7,
   "outdoorAH": 17.8,
   "co2Level": {
     "level": "良好",
