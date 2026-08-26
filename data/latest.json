@@ -1,14 +1,14 @@
 {
-  "updatedAt": "2026-08-26T10:19:52.409Z",
+  "updatedAt": "2026-08-26T10:55:47.150Z",
   "indoor": {
-    "temperature": 28.6,
-    "humidity": 50,
-    "co2": 473
+    "temperature": 27.2,
+    "humidity": 52,
+    "co2": 425
   },
   "outdoor": {
-    "temperature": 22.4,
-    "humidity": 76,
-    "observedAt": "2026-08-26T19:10:00+09:00"
+    "temperature": 22.3,
+    "humidity": 77,
+    "observedAt": "2026-08-26T19:40:00+09:00"
   },
   "judgment": "エアコン（冷房）",
   "reason": "外気の方が涼しいですが、屋外も蒸し暑く、窓を開けても十分涼しくなりません。",
@@ -16,19 +16,19 @@
   "recommendedFanSpeed": "自動",
   "humidityNote": null,
   "co2Note": null,
-  "indoorDI": 76.5,
+  "indoorDI": 74.9,
   "outdoorDI": 70.4,
-  "indoorAH": 14,
-  "outdoorAH": 15.1,
+  "indoorAH": 13.5,
+  "outdoorAH": 15.2,
   "co2Level": {
     "level": "良好",
     "color": "green",
     "description": "換気の良い居住空間の一般的なレベルです。"
   },
   "comfortLevel": {
-    "level": "暑い",
-    "color": "red",
-    "description": "気温・湿度が高く、蒸し暑く感じるレベルです。"
+    "level": "快適",
+    "color": "green",
+    "description": "気温・湿度ともに快適なレベルです。"
   },
   "acFeedback": null,
   "overcoolingWarning": null
