@@ -1,14 +1,14 @@
 {
-  "updatedAt": "2026-08-26T12:49:36.048Z",
+  "updatedAt": "2026-08-26T13:42:18.971Z",
   "indoor": {
-    "temperature": 26.5,
+    "temperature": 27.3,
     "humidity": 56,
-    "co2": 516
+    "co2": 526
   },
   "outdoor": {
-    "temperature": 21.3,
-    "humidity": 86,
-    "observedAt": "2026-08-26T21:40:00+09:00"
+    "temperature": 20.7,
+    "humidity": 93,
+    "observedAt": "2026-08-26T22:30:00+09:00"
   },
   "judgment": "エアコン（冷房）",
   "reason": "外気を入れると余計蒸し暑くなります。",
@@ -16,19 +16,19 @@
   "recommendedFanSpeed": "自動",
   "humidityNote": null,
   "co2Note": null,
-  "indoorDI": 74.4,
-  "outdoorDI": 69.4,
-  "indoorAH": 14,
-  "outdoorAH": 16,
+  "indoorDI": 75.5,
+  "outdoorDI": 68.8,
+  "indoorAH": 14.6,
+  "outdoorAH": 16.7,
   "co2Level": {
     "level": "良好",
     "color": "green",
     "description": "換気の良い居住空間の一般的なレベルです。"
   },
   "comfortLevel": {
-    "level": "快適",
-    "color": "green",
-    "description": "気温・湿度ともに快適なレベルです。"
+    "level": "暑い",
+    "color": "red",
+    "description": "気温・湿度が高く、蒸し暑く感じるレベルです。"
   },
   "acFeedback": null,
   "overcoolingWarning": null
