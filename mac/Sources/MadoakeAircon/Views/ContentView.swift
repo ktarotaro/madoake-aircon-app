@@ -39,8 +39,7 @@ struct ContentView: View {
                     Text(viewModel.errorMessage ?? "データがありません")
                         .font(.caption)
                         .foregroundColor(SystemStatusColor.primary)
-                    Button("再読み込み") { Task { await viewModel.refresh() } }
-                        .foregroundColor(SystemStatusColor.primary)
+                    secondaryButton("再読み込み") { Task { await viewModel.refresh() } }
                 }
                 .padding(16)
                 .frame(width: 320)
@@ -59,13 +58,11 @@ struct ContentView: View {
                     .font(.caption)
                     .foregroundColor(SystemStatusColor.primary)
                 HStack(spacing: 8) {
-                    Button("実行する") {
+                    secondaryButton("実行する") {
                         Task { await viewModel.executeAc(action: action == .on ? "on" : "off") }
                         pendingAction = nil
                     }
-                    .foregroundColor(SystemStatusColor.primary)
-                    Button("キャンセル") { pendingAction = nil }
-                        .foregroundColor(SystemStatusColor.primary)
+                    secondaryButton("キャンセル") { pendingAction = nil }
                 }
             }
             .padding(8)
@@ -136,7 +133,9 @@ struct ContentView: View {
                                 .frame(maxWidth: .infinity)
                                 .frame(height: 40)
                         }
-                        .buttonStyle(.bordered)
+                        .buttonStyle(.plain)
+                        .background(Color.gray.opacity(0.15))
+                        .cornerRadius(6)
                     }
                     .disabled(viewModel.isLoading || pendingAction != nil)
 
@@ -210,12 +209,8 @@ struct ContentView: View {
                     .toggleStyle(.switch)
 
                 HStack(spacing: 4) {
-                    Button("再読み込み") { Task { await viewModel.refresh() } }
-                        .font(.caption2)
-                        .foregroundColor(SystemStatusColor.primary)
-                    Button("テスト") { NotificationService.sendTest() }
-                        .font(.caption2)
-                        .foregroundColor(SystemStatusColor.primary)
+                    secondaryButton("再読み込み", font: .caption2) { Task { await viewModel.refresh() } }
+                    secondaryButton("テスト", font: .caption2) { NotificationService.sendTest() }
                     Spacer()
                     Menu {
                         Button("ログアウト") { viewModel.logout() }
@@ -300,6 +295,24 @@ struct ContentView: View {
             Text("DI: \(di, specifier: "%.1f")").font(.caption2).foregroundColor(SystemStatusColor.secondary)
             Text("AH: \(ah, specifier: "%.1f") g/m³").font(.caption2).foregroundColor(SystemStatusColor.secondary)
         }
+    }
+
+    // .buttonStyle(.bordered)やデフォルトスタイルは、システムのvibrancy効果に
+    // 依存しており、ダークモードでは背景・枠線ごと透明になって完全に見えなくなる
+    // （2026-08-28、実機で「実行する」以外のボタンが軒並み消えることが発覚。
+    // 唯一 .borderedProminent の「実行する」だけは背景が塗りつぶしのため無事だった）。
+    // .buttonStyle(.plain) + 固定色の背景で自前描画することで回避する。
+    private func secondaryButton(_ title: String, font: Font = .body, action: @escaping () -> Void) -> some View {
+        Button(action: action) {
+            Text(title)
+                .font(font)
+                .foregroundColor(SystemStatusColor.primary)
+                .padding(.horizontal, 8)
+                .padding(.vertical, 4)
+        }
+        .buttonStyle(.plain)
+        .background(Color.gray.opacity(0.15))
+        .cornerRadius(4)
     }
 
     private func feedbackColor(_ status: String) -> Color {
