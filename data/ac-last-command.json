@@ -1,13 +1,17 @@
 {
-  "sentAt": "2026-08-25T14:31:51.811Z",
-  "power": "off",
-  "temperature": null,
-  "mode": null,
-  "modeLabel": "OFF",
-  "fanSpeed": null,
-  "fanSpeedLabel": null,
-  "basedOnJudgment": null,
-  "indoorTemperatureAtCommand": null,
+  "sentAt": "2026-08-28T02:54:44.596Z",
+  "power": "on",
+  "temperature": 27,
+  "mode": 2,
+  "modeLabel": "冷房",
+  "fanSpeed": 1,
+  "fanSpeedLabel": "自動",
+  "basedOnJudgment": {
+    "judgment": "エアコン（冷房）",
+    "reason": "外気の方が涼しいですが、屋外も蒸し暑く、窓を開けても十分涼しくなりません。",
+    "updatedAt": "2026-08-27T22:44:36.480Z"
+  },
+  "indoorTemperatureAtCommand": 26.9,
   "note": "赤外線リモコン経由のため、エアコンが実際にこの通り反応したかはAPIでは確認できません。目視で確認してください。",
   "triggeredFrom": "web"
 }
