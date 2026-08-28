@@ -8,12 +8,14 @@ struct LoginView: View {
         VStack(alignment: .leading, spacing: 12) {
             Text("窓開け／エアコン判断アプリ")
                 .font(.headline)
+                .foregroundColor(SystemStatusColor.primary)
 
             SecureField("パスワード", text: $password)
                 .textFieldStyle(.roundedBorder)
                 .onSubmit { submit() }
 
             Button("ログイン") { submit() }
+                .foregroundColor(SystemStatusColor.primary)
                 .disabled(password.isEmpty || viewModel.isLoading)
 
             if let error = viewModel.errorMessage {
