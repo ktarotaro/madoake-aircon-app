@@ -1,25 +1,23 @@
 {
-  "updatedAt": "2026-09-03T14:29:31.089Z",
+  "updatedAt": "2026-09-03T17:59:05.710Z",
   "indoor": {
     "temperature": 26.4,
-    "humidity": 52,
-    "co2": 654
+    "humidity": 55,
+    "co2": 754
   },
   "outdoor": {
-    "temperature": 19,
-    "humidity": 94,
-    "observedAt": "2026-09-03T23:20:00+09:00"
+    "temperature": 19.7,
+    "humidity": 87,
+    "observedAt": "2026-09-04T02:50:00+09:00"
   },
-  "judgment": "エアコン（冷房）",
-  "reason": "外気を入れると余計蒸し暑くなります。",
-  "recommendedTemperature": 27,
-  "recommendedFanSpeed": "自動",
+  "judgment": "窓を開ける",
+  "reason": "外気の方が6.7℃涼しく、湿気も室内より同程度です。",
   "humidityNote": null,
   "co2Note": null,
-  "indoorDI": 73.8,
-  "outdoorDI": 65.9,
-  "indoorAH": 12.9,
-  "outdoorAH": 15.3,
+  "indoorDI": 74.2,
+  "outdoorDI": 66.8,
+  "indoorAH": 13.7,
+  "outdoorAH": 14.8,
   "co2Level": {
     "level": "良好",
     "color": "green",
