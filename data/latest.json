@@ -1,22 +1,24 @@
 {
-  "updatedAt": "2026-09-07T22:03:41.387Z",
+  "updatedAt": "2026-09-08T00:17:26.903Z",
   "indoor": {
-    "temperature": 27.5,
+    "temperature": 27.7,
     "humidity": 51,
-    "co2": 680
+    "co2": 553
   },
   "outdoor": {
-    "temperature": 19.7,
-    "humidity": 86,
-    "observedAt": "2026-09-08T06:50:00+09:00"
+    "temperature": 23.3,
+    "humidity": 70,
+    "observedAt": "2026-09-08T09:00:00+09:00"
   },
-  "judgment": "窓を開ける",
-  "reason": "外気の方が7.8℃涼しく、湿気も室内より同程度です。",
+  "judgment": "エアコン（冷房）",
+  "reason": "外気の方が涼しいですが、屋外も蒸し暑く、窓を開けても十分涼しくなりません。",
+  "recommendedTemperature": 27,
+  "recommendedFanSpeed": "自動",
   "humidityNote": null,
   "co2Note": null,
-  "indoorDI": 75.2,
-  "outdoorDI": 66.7,
-  "indoorAH": 13.5,
+  "indoorDI": 75.4,
+  "outdoorDI": 71.3,
+  "indoorAH": 13.6,
   "outdoorAH": 14.6,
   "co2Level": {
     "level": "良好",
