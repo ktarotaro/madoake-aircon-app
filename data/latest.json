@@ -1,32 +1,32 @@
 {
-  "updatedAt": "2026-09-22T05:48:34.057Z",
+  "updatedAt": "2026-09-22T10:22:41.482Z",
   "indoor": {
-    "temperature": 28.7,
-    "humidity": 39,
-    "co2": 431
+    "temperature": 27.9,
+    "humidity": 40,
+    "co2": 499
   },
   "outdoor": {
-    "temperature": 21.6,
-    "humidity": 52,
-    "observedAt": "2026-09-22T14:40:00+09:00"
+    "temperature": 19.1,
+    "humidity": 64,
+    "observedAt": "2026-09-22T19:10:00+09:00"
   },
   "judgment": "窓を開ける",
-  "reason": "外気の方が7.1℃涼しく、湿気も室内より少なめです。",
-  "humidityNote": "室内が乾燥気味です。加湿器の使用を検討してください。",
+  "reason": "外気の方が8.8℃涼しく、湿気も室内より少なめです。",
+  "humidityNote": null,
   "co2Note": null,
-  "indoorDI": 75.1,
-  "outdoorDI": 67.5,
-  "indoorAH": 11,
-  "outdoorAH": 9.9,
+  "indoorDI": 74.2,
+  "outdoorDI": 64.7,
+  "indoorAH": 10.8,
+  "outdoorAH": 10.5,
   "co2Level": {
     "level": "良好",
     "color": "green",
     "description": "換気の良い居住空間の一般的なレベルです。"
   },
   "comfortLevel": {
-    "level": "暑い",
-    "color": "red",
-    "description": "気温・湿度が高く、蒸し暑く感じるレベルです。"
+    "level": "快適",
+    "color": "green",
+    "description": "気温・湿度ともに快適なレベルです。"
   },
   "acFeedback": null,
   "overcoolingWarning": null
