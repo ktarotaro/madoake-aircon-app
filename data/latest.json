@@ -1,32 +1,32 @@
 {
-  "updatedAt": "2026-09-23T23:50:05.107Z",
+  "updatedAt": "2026-09-24T01:41:11.594Z",
   "indoor": {
-    "temperature": 28.4,
-    "humidity": 49,
-    "co2": 1302
+    "temperature": 28.1,
+    "humidity": 36,
+    "co2": 449
   },
   "outdoor": {
-    "temperature": 19.4,
-    "humidity": 58,
-    "observedAt": "2026-09-24T08:40:00+09:00"
+    "temperature": 22.8,
+    "humidity": 48,
+    "observedAt": "2026-09-24T10:30:00+09:00"
   },
   "judgment": "窓を開ける",
-  "reason": "外気の方が9℃涼しく、湿気も室内より少なめです。",
-  "humidityNote": null,
-  "co2Note": "室内のCO2濃度が高めです。換気をおすすめします。",
-  "indoorDI": 76.1,
-  "outdoorDI": 64.9,
-  "indoorAH": 13.6,
+  "reason": "外気の方が5.3℃涼しく、湿気も室内より少なめです。",
+  "humidityNote": "室内が乾燥気味です。加湿器の使用を検討してください。",
+  "co2Note": null,
+  "indoorDI": 73.9,
+  "outdoorDI": 68.7,
+  "indoorAH": 9.8,
   "outdoorAH": 9.7,
   "co2Level": {
-    "level": "注意",
-    "color": "yellow",
-    "description": "十分でない酸素濃度で、眠く不快なレベルです。"
+    "level": "良好",
+    "color": "green",
+    "description": "換気の良い居住空間の一般的なレベルです。"
   },
   "comfortLevel": {
-    "level": "暑い",
-    "color": "red",
-    "description": "気温・湿度が高く、蒸し暑く感じるレベルです。"
+    "level": "快適",
+    "color": "green",
+    "description": "気温・湿度ともに快適なレベルです。"
   },
   "acFeedback": null,
   "overcoolingWarning": null
