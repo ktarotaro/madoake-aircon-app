@@ -1,23 +1,23 @@
 {
-  "updatedAt": "2026-09-27T10:48:45.765Z",
+  "updatedAt": "2026-09-27T15:21:45.070Z",
   "indoor": {
-    "temperature": 26.8,
-    "humidity": 51,
-    "co2": 513
+    "temperature": 27.2,
+    "humidity": 49,
+    "co2": 553
   },
   "outdoor": {
-    "temperature": 18.9,
-    "humidity": 87,
-    "observedAt": "2026-09-27T19:40:00+09:00"
+    "temperature": 18,
+    "humidity": 91,
+    "observedAt": "2026-09-28T00:10:00+09:00"
   },
   "judgment": "窓を開ける",
-  "reason": "外気の方が7.9℃涼しく、湿気も室内より同程度です。",
+  "reason": "外気の方が9.2℃涼しく、湿気も室内より同程度です。",
   "humidityNote": null,
   "co2Note": null,
-  "indoorDI": 74.2,
-  "outdoorDI": 65.4,
-  "indoorAH": 13,
-  "outdoorAH": 14.1,
+  "indoorDI": 74.5,
+  "outdoorDI": 64.1,
+  "indoorAH": 12.7,
+  "outdoorAH": 14,
   "co2Level": {
     "level": "良好",
     "color": "green",
