@@ -1,27 +1,27 @@
 {
-  "updatedAt": "2026-10-03T02:19:21.972Z",
+  "updatedAt": "2026-10-03T08:17:56.583Z",
   "indoor": {
-    "temperature": 26.1,
-    "humidity": 42,
-    "co2": 1185
+    "temperature": 25.6,
+    "humidity": 40,
+    "co2": 726
   },
   "outdoor": {
-    "temperature": 15,
-    "humidity": 59,
-    "observedAt": "2026-10-03T11:10:00+09:00"
+    "temperature": 14.2,
+    "humidity": 58,
+    "observedAt": "2026-10-03T17:10:00+09:00"
   },
   "judgment": "窓を開ける",
-  "reason": "外気の方が11.1℃涼しく、湿気も室内より少なめです。",
+  "reason": "外気の方が11.4℃涼しく、湿気も室内より少なめです。",
   "humidityNote": null,
-  "co2Note": "室内のCO2濃度が高めです。換気をおすすめします。",
-  "indoorDI": 72.3,
-  "outdoorDI": 58.8,
-  "indoorAH": 10.3,
-  "outdoorAH": 7.6,
+  "co2Note": null,
+  "indoorDI": 71.5,
+  "outdoorDI": 57.7,
+  "indoorAH": 9.5,
+  "outdoorAH": 7.1,
   "co2Level": {
-    "level": "注意",
-    "color": "yellow",
-    "description": "十分でない酸素濃度で、眠く不快なレベルです。"
+    "level": "良好",
+    "color": "green",
+    "description": "換気の良い居住空間の一般的なレベルです。"
   },
   "comfortLevel": {
     "level": "快適",
