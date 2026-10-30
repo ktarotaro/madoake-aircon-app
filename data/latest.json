@@ -1,27 +1,27 @@
 {
-  "updatedAt": "2026-10-30T07:45:35.279Z",
+  "updatedAt": "2026-10-30T14:34:11.441Z",
   "indoor": {
-    "temperature": 22.7,
-    "humidity": 42,
-    "co2": 761
+    "temperature": 22,
+    "humidity": 44,
+    "co2": 1095
   },
   "outdoor": {
-    "temperature": 14.7,
-    "humidity": 74,
-    "observedAt": "2026-10-30T16:30:00+09:00"
+    "temperature": 13.5,
+    "humidity": 63,
+    "observedAt": "2026-10-30T23:20:00+09:00"
   },
   "judgment": "どちらでもいい",
   "reason": "室内はすでに快適な状態です。",
   "humidityNote": null,
-  "co2Note": null,
-  "indoorDI": 68.1,
-  "outdoorDI": 58.4,
+  "co2Note": "室内のCO2濃度が高めです。換気をおすすめします。",
+  "indoorDI": 67.4,
+  "outdoorDI": 56.6,
   "indoorAH": 8.5,
-  "outdoorAH": 9.3,
+  "outdoorAH": 7.4,
   "co2Level": {
-    "level": "良好",
-    "color": "green",
-    "description": "換気の良い居住空間の一般的なレベルです。"
+    "level": "注意",
+    "color": "yellow",
+    "description": "十分でない酸素濃度で、眠く不快なレベルです。"
   },
   "comfortLevel": {
     "level": "快適",
