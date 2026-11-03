@@ -1,23 +1,23 @@
 {
-  "updatedAt": "2026-11-03T16:19:55.609Z",
+  "updatedAt": "2026-11-03T21:51:07.958Z",
   "indoor": {
-    "temperature": 21.4,
-    "humidity": 47,
-    "co2": 920
+    "temperature": 20.7,
+    "humidity": 45,
+    "co2": 982
   },
   "outdoor": {
     "temperature": 3,
-    "humidity": 91,
-    "observedAt": "2026-11-04T01:10:00+09:00"
+    "humidity": 93,
+    "observedAt": "2026-11-04T06:40:00+09:00"
   },
   "judgment": "どちらでもいい",
   "reason": "室内はすでに快適な状態です。",
   "humidityNote": null,
   "co2Note": null,
-  "indoorDI": 66.9,
-  "outdoorDI": 38.4,
-  "indoorAH": 8.8,
-  "outdoorAH": 5.4,
+  "indoorDI": 65.9,
+  "outdoorDI": 38.2,
+  "indoorAH": 8.1,
+  "outdoorAH": 5.5,
   "co2Level": {
     "level": "良好",
     "color": "green",
