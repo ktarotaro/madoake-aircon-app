@@ -1,0 +1,15 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "schedules": {
+    "heating-plan-2100": {
+      "schedule": "0 21 * * *",
+      "timezone": "Asia/Tokyo",
+      "path": "/api/heating-plan"
+    },
+    "heating-plan-2120": {
+      "schedule": "20 21 * * *",
+      "timezone": "Asia/Tokyo",
+      "path": "/api/heating-plan"
+    }
+  }
+}

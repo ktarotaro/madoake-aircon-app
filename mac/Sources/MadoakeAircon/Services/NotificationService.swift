@@ -53,6 +53,22 @@ enum NotificationService {
         send(title: "冷えすぎ注意", body: warning)
     }
 
+    // 翌日の暖房の段取り（2026-11-11追加）。同じ段取りは1回だけ、期限（本番は当日22時）までに見つけたときだけ通知する。
+    // 21時にスリープ中・未起動だった場合は、期限内に復帰・起動すればそのときに届き、期限を過ぎたら届かない（iPhoneには届いている）。
+    // 21時に予約する方式（UNCalendarNotificationTrigger）は、スリープ中に時刻を過ぎたときの挙動がAppleの資料に無いため使わない。
+    private static let lastHeatingPlanIdKey = "lastNotifiedHeatingPlanId"
+
+    static func notifyHeatingPlanIfNeeded(_ plan: HeatingPlan, now: Date = Date()) {
+        let defaults = UserDefaults.standard
+        guard defaults.string(forKey: lastHeatingPlanIdKey) != plan.id else { return }
+        defaults.set(plan.id, forKey: lastHeatingPlanIdKey)
+
+        let formatter = ISO8601DateFormatter()
+        formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+        guard let deadline = formatter.date(from: plan.notifyUntil), now < deadline else { return }
+        send(title: plan.title, body: plan.body)
+    }
+
     private static func send(title: String, body: String) {
         let content = UNMutableNotificationContent()
         content.title = title

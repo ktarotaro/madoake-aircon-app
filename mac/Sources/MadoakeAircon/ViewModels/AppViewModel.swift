@@ -1,5 +1,6 @@
 import Foundation
 import Combine
+import AppKit
 
 @MainActor
 final class AppViewModel: ObservableObject {
@@ -18,6 +19,16 @@ final class AppViewModel: ObservableObject {
             Task { await login(password: savedPassword, save: false) }
         }
         startAutoRefresh()
+        observeWake()
+    }
+
+    // スリープから復帰したらすぐ読み直す（10分おきのタイマーを待たずに、21時の暖房の段取りを拾うため。2026-11-11）
+    private func observeWake() {
+        NSWorkspace.shared.notificationCenter.addObserver(
+            forName: NSWorkspace.didWakeNotification, object: nil, queue: .main
+        ) { [weak self] _ in
+            Task { @MainActor in await self?.refresh() }
+        }
     }
 
     deinit {
@@ -74,6 +85,14 @@ final class AppViewModel: ObservableObject {
         } catch {
             errorMessage = (error as? VercelAPIError)?.errorDescription ?? error.localizedDescription
         }
+
+        await checkHeatingPlan()
+    }
+
+    // 翌日の暖房の段取り。取れなくても画面のエラー表示には出さない（判定の表示とは独立した通知だけの機能のため）
+    private func checkHeatingPlan() async {
+        guard let plan = try? await api.fetchHeatingPlan() else { return }
+        NotificationService.notifyHeatingPlanIfNeeded(plan)
     }
 
     func executeAc(action: String) async {

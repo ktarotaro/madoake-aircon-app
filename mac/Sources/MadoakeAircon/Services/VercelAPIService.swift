@@ -22,6 +22,10 @@ final class VercelAPIService {
         string: "https://raw.githubusercontent.com/ktarotaro/madoake-aircon-app/main/data/latest.json"
     )!
 
+    private let heatingPlanJSONURL = URL(
+        string: "https://raw.githubusercontent.com/ktarotaro/madoake-aircon-app/main/data/heating-plan.json"
+    )!
+
     private lazy var session: URLSession = {
         let config = URLSessionConfiguration.default
         config.httpCookieAcceptPolicy = .always
@@ -65,6 +69,21 @@ final class VercelAPIService {
 
         let decoder = JSONDecoder()
         return try decoder.decode(LatestData.self, from: data)
+    }
+
+    // 翌日の暖房の段取り。まだ一度も作られていない（404）ときは nil
+    func fetchHeatingPlan() async throws -> HeatingPlan? {
+        var request = URLRequest(url: heatingPlanJSONURL)
+        request.cachePolicy = .reloadIgnoringLocalCacheData
+
+        let (data, response) = try await session.data(for: request)
+
+        guard let http = response as? HTTPURLResponse else { return nil }
+        if http.statusCode == 404 { return nil }
+        guard http.statusCode == 200 else {
+            throw VercelAPIError.server("暖房の段取りを取得できませんでした")
+        }
+        return try JSONDecoder().decode(HeatingPlan.self, from: data)
     }
 
     func applyAc(action: String) async throws {

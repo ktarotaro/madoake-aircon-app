@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { accessibleColors } from "../lib/accessibleColors";
 
-const VAPID_PUBLIC_KEY = "BMWHzucf2mk6Rtfpj3nsSHSYJk3DvMYlm-XHwSRJ3oPp_iN1JY2UvaKFfWT5w7EaHXbsM6TOtIpVsH4F2NR80Pk";
+const VAPID_PUBLIC_KEY = "BC3yh0p2RQrrb6CL7TKJ2DuJ9WFobZnt-hfL8GVnjuQRDGOX_SJwjOduyGJHqJzKHr8JJol-uU4t-ELjplBVRxs";
 
 function urlBase64ToUint8Array(base64String) {
   const padding = "=".repeat((4 - (base64String.length % 4)) % 4);
