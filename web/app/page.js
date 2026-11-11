@@ -8,6 +8,20 @@ export const dynamic = "force-dynamic";
 const RAW_URL =
   "https://raw.githubusercontent.com/ktarotaro/madoake-aircon-app/main/data/latest.json";
 
+const HEATING_PLAN_URL =
+  "https://raw.githubusercontent.com/ktarotaro/madoake-aircon-app/main/data/heating-plan.json";
+
+// 翌日の暖房の段取り（2026-11-11追加）。冬の日（winter が true）のときだけ表示する。取れなくても画面全体は出す
+async function getHeatingPlan() {
+  try {
+    const res = await fetch(HEATING_PLAN_URL, { cache: "no-store" });
+    if (!res.ok) return null;
+    return await res.json();
+  } catch {
+    return null;
+  }
+}
+
 async function getLatest() {
   const res = await fetch(RAW_URL, { cache: "no-store" });
   if (!res.ok) return null;
@@ -33,7 +47,7 @@ const levelColors = {
 };
 
 export default async function Home() {
-  const latest = await getLatest();
+  const [latest, heatingPlan] = await Promise.all([getLatest(), getHeatingPlan()]);
 
   if (!latest) {
     return (
@@ -93,6 +107,23 @@ export default async function Home() {
 
       {overcoolingWarning && (
         <p style={{ marginTop: 8, color: accessibleColors.info }}>❄️ {overcoolingWarning}</p>
+      )}
+
+      {heatingPlan?.winter && (
+        <section
+          style={{
+            marginTop: 16,
+            padding: 12,
+            border: `1px solid ${accessibleColors.info}`,
+            borderRadius: 8,
+          }}
+        >
+          <h2 style={{ fontSize: 14, color: accessibleColors.info, margin: 0 }}>
+            🔥 {heatingPlan.dateLabel}の暖房の段取り
+          </h2>
+          <p style={{ fontWeight: "bold", margin: "6px 0 4px" }}>{heatingPlan.summary}</p>
+          <p style={{ fontSize: 14, margin: 0 }}>{heatingPlan.body}</p>
+        </section>
       )}
 
       <hr style={{ margin: "24px 0" }} />

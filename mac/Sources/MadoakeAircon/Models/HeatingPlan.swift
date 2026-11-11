@@ -10,4 +10,9 @@ struct HeatingPlan: Codable {
     let test: Bool
     let title: String
     let body: String
+    // 2026-11-11 追加（冬だけ通知・表示）。この項目が無い古いファイルでも読めるよう省略可にする
+    let winter: Bool?
+    let notify: Bool?
+    let dateLabel: String?
+    let summary: String?
 }

@@ -7,6 +7,9 @@ import {
   extractTemps,
   decideHeatingPlan,
   buildHeatingMessage,
+  isWinterDay,
+  dateLabelJa,
+  tempSummary,
   FORECAST_UNAVAILABLE_MESSAGE,
 } from "../../../lib/heatingPlan";
 
@@ -14,6 +17,8 @@ import {
 // Vercel Schedules（web/vercel.json）から21:00と21:20に呼ばれる。21:20の回は、21:00の回が
 // 送れていなかったときの予備（同じ日の分を送り済みなら何もしない。Vercelは失敗した回を再実行しないため）。
 // 結果は data/heating-plan.json に保存し、Macアプリはそれを読んで通知する（判定ルールはここだけに置く）。
+// 通知するのは冬の日（明日の最低気温が config の notifyMin 以下）だけ。冬でない日も結果は保存し、アプリは winter が true のときだけ段取りを表示する。
+// 予報を取れなかった日は、前回が冬の日だったときだけ「予報を取れませんでした」を通知する（夏に通知が来ないように）。
 // 手動のテスト送信：?test=1 を付けると、送り済みでも時刻に関係なく「【テスト】」付きで送る。
 // 認証は CRON_SECRET（Vercelが Authorization: Bearer で送る）。パスワードのログインとは別（web/proxy.js で除外）。
 
@@ -74,14 +79,21 @@ async function handle(request) {
   const plan = temps ? decideHeatingPlan(temps, config.heatingThresholds) : null;
   const message = temps ? buildHeatingMessage(temps, plan) : FORECAST_UNAVAILABLE_MESSAGE;
   const title = isTest ? `【テスト】${message.title}` : message.title;
+  const winter = temps ? isWinterDay(temps, config.heatingThresholds) : previous?.winter === true;
+  // テストは冬でなくても送る（届くかを確かめるため）
+  const notify = isTest || winter;
 
-  const { data: subscriptions } = await getJsonFile({ ...repoArgs, path: config.pushSubscriptionsPath });
-  const { sent, deadEndpoints } = await sendPushToAll({
-    subscriptions: subscriptions ?? [],
-    vapidPrivateKey,
-    title,
-    body: message.body,
-  });
+  let sent = 0;
+  let deadEndpoints = [];
+  if (notify) {
+    const { data: subscriptions } = await getJsonFile({ ...repoArgs, path: config.pushSubscriptionsPath });
+    ({ sent, deadEndpoints } = await sendPushToAll({
+      subscriptions: subscriptions ?? [],
+      vapidPrivateKey,
+      title,
+      body: message.body,
+    }));
+  }
 
   const result = {
     id: `${targetDate}-${now.getTime()}`,
@@ -90,6 +102,10 @@ async function handle(request) {
     // テストはすぐ確かめられるよう1時間、本番は今日の22時（蓄熱の設定期限）まで、Macアプリが通知してよい
     notifyUntil: isTest ? new Date(now.getTime() + 60 * 60 * 1000).toISOString() : todayDeadlineIso(now),
     test: isTest,
+    winter,
+    notify,
+    dateLabel: dateLabelJa(targetDate),
+    summary: temps ? tempSummary(temps) : "予報を取れませんでした",
     forecast: temps,
     plan,
     title,

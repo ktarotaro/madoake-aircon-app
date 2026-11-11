@@ -5,6 +5,9 @@ import {
   extractTemps,
   decideHeatingPlan,
   buildHeatingMessage,
+  isWinterDay,
+  dateLabelJa,
+  tempSummary,
 } from "../web/lib/heatingPlan.js";
 import { config } from "../web/lib/config.js";
 
@@ -107,4 +110,25 @@ test("値が空文字 → null", () => {
 test("想定と違う形のJSON → null", () => {
   assert.equal(extractTemps({}, "2026-11-12", "14163"), null);
   assert.equal(extractTemps(null, "2026-11-12", "14163"), null);
+});
+
+test("最低 3℃ ちょうど → 冬の日（通知する）", () => {
+  assert.equal(isWinterDay({ max: 10, min: 3 }, t), true);
+});
+
+test("最低 4℃ → 冬の日ではない（通知しない）", () => {
+  assert.equal(isWinterDay({ max: 10, min: 4 }, t), false);
+});
+
+test("最低 -10℃ → 冬の日", () => {
+  assert.equal(isWinterDay({ max: -3, min: -10 }, t), true);
+});
+
+test("画面の日付は「11/12（木）」の形", () => {
+  assert.equal(dateLabelJa("2026-11-12"), "11/12（木）");
+  assert.equal(dateLabelJa("2027-01-03"), "1/3（日）");
+});
+
+test("画面の気温は「明日」を付けない", () => {
+  assert.equal(tempSummary({ max: 12, min: 0 }), "最高12℃・最低0℃");
 });

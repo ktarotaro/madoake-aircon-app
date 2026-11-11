@@ -9,6 +9,8 @@ final class AppViewModel: ObservableObject {
     @Published var isLoading: Bool = false
     @Published var errorMessage: String?
     @Published var actionResultMessage: String?
+    // 翌日の暖房の段取り。冬の日（winter が true）のときだけ画面に出す（2026-11-11）
+    @Published var heatingPlan: HeatingPlan?
 
     private let api = VercelAPIService.shared
     private var refreshTimer: Timer?
@@ -92,6 +94,7 @@ final class AppViewModel: ObservableObject {
     // 翌日の暖房の段取り。取れなくても画面のエラー表示には出さない（判定の表示とは独立した通知だけの機能のため）
     private func checkHeatingPlan() async {
         guard let plan = try? await api.fetchHeatingPlan() else { return }
+        heatingPlan = plan
         NotificationService.notifyHeatingPlanIfNeeded(plan)
     }
 

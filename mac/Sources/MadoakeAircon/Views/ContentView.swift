@@ -80,6 +80,27 @@ struct ContentView: View {
         return "\(latest.modeLabel ?? "")・\(temp)・\(fanSpeed) でエアコンを操作します。よろしいですか？"
     }
 
+    // 翌日の暖房の段取り（2026-11-11）。ダークモード対策のため、文字は固定色・背景は白固定の上に枠線だけ引く
+    private func heatingPlanSection(_ plan: HeatingPlan) -> some View {
+        VStack(alignment: .leading, spacing: 4) {
+            Text("🔥 \(plan.dateLabel ?? "")の暖房の段取り")
+                .font(.caption)
+                .bold()
+                .foregroundColor(SystemStatusColor.info)
+            Text(plan.summary ?? "")
+                .font(.callout)
+                .bold()
+                .foregroundColor(SystemStatusColor.primary)
+            Text(plan.body)
+                .font(.caption)
+                .foregroundColor(SystemStatusColor.primary)
+                .fixedSize(horizontal: false, vertical: true)
+        }
+        .padding(8)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .overlay(RoundedRectangle(cornerRadius: 6).stroke(SystemStatusColor.info, lineWidth: 1))
+    }
+
     @ViewBuilder
     private func dashboard(_ latest: LatestData) -> some View {
         VStack(alignment: .leading, spacing: 10) {
@@ -169,6 +190,10 @@ struct ContentView: View {
                         Text("❄️ \(warning)")
                             .font(.caption2)
                             .foregroundColor(SystemStatusColor.info)
+                    }
+
+                    if let plan = viewModel.heatingPlan, plan.winter == true {
+                        heatingPlanSection(plan)
                     }
 
                     Divider()

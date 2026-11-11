@@ -65,6 +65,8 @@ enum NotificationService {
 
         let formatter = ISO8601DateFormatter()
         formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+        // 冬でない日（明日の最低気温が3℃より高い日）は、サーバーが notify=false にしてくる
+        guard plan.notify != false else { return }
         guard let deadline = formatter.date(from: plan.notifyUntil), now < deadline else { return }
         send(title: plan.title, body: plan.body)
     }

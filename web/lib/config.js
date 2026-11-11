@@ -17,6 +17,7 @@ export const config = {
     veryColdMax: 0, // 最高がこれ未満なら真冬日 → 蓄熱「強め」
     coldMin: -5, // 最低がこれ以下なら → 蓄熱「中くらい」
     mildMax: 5, // 最高がこれ未満なら → 蓄熱「弱め」。以上なら「切る〜最小」
+    notifyMin: 3, // 最低がこれ以下の日だけ通知し、アプリに段取りを表示する（冬だけ。2026-11-11 本人決定）
   },
   vapidPublicKey: "BC3yh0p2RQrrb6CL7TKJ2DuJ9WFobZnt-hfL8GVnjuQRDGOX_SJwjOduyGJHqJzKHr8JJol-uU4t-ELjplBVRxs",
 };

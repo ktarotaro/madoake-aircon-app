@@ -38,6 +38,18 @@ export function extractTemps(forecastJson, targetDate, pointCode) {
   return null;
 }
 
+// 冬の日か（明日の最低気温がしきい値以下）。冬の日だけ通知し、アプリに段取りを表示する（2026-11-11 本人決定：3℃以下）
+export function isWinterDay({ min }, thresholds) {
+  return min <= thresholds.notifyMin;
+}
+
+// 画面に出す日付「11/12（木）」。targetDate は YYYY-MM-DD（日本時間の日付）
+export function dateLabelJa(targetDate) {
+  const [y, m, d] = targetDate.split("-").map(Number);
+  const weekday = ["日", "月", "火", "水", "木", "金", "土"][new Date(Date.UTC(y, m - 1, d)).getUTCDay()];
+  return `${m}/${d}（${weekday}）`;
+}
+
 // 判定は上から順に当てはめ、最初に当たったものを使う
 export function decideHeatingPlan({ max, min }, thresholds) {
   if (max < thresholds.veryColdMax) {
@@ -52,9 +64,14 @@ export function decideHeatingPlan({ max, min }, thresholds) {
   return { storage: "切る〜最小", morning: "7:00", daytime: "在宅時に運転", evening: "夕方〜就寝に運転" };
 }
 
+// 「最高12℃・最低0℃」。アプリの表示は日をまたいでも読めるよう「明日」を付けない
+export function tempSummary(temps) {
+  return `最高${temps.max}℃・最低${temps.min}℃`;
+}
+
 // 通知文（ロック画面で読める長さ）
 export function buildHeatingMessage(temps, plan) {
-  const title = `明日 最高${temps.max}℃・最低${temps.min}℃`;
+  const title = `明日 ${tempSummary(temps)}`;
   const storage = `蓄熱は「${plan.storage}」（22時までに設定）。`;
   const aircon = plan.morning
     ? `エアコンは朝${plan.morning}タイマー、${plan.evening}。`
