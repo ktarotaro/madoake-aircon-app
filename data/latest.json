@@ -1,23 +1,23 @@
 {
-  "updatedAt": "2026-11-19T10:11:48.468Z",
+  "updatedAt": "2026-11-20T08:38:12.439Z",
   "indoor": {
     "temperature": 21,
     "humidity": 37,
-    "co2": 758
+    "co2": 736
   },
   "outdoor": {
-    "temperature": -1,
-    "humidity": 90,
-    "observedAt": "2026-11-19T19:00:00+09:00"
+    "temperature": -1.5,
+    "humidity": 83,
+    "observedAt": "2026-11-20T17:30:00+09:00"
   },
   "judgment": "どちらでもいい",
   "reason": "室内はすでに快適な状態です。",
   "humidityNote": "室内が乾燥気味です。加湿器の使用を検討してください。",
   "co2Note": null,
   "indoorDI": 65.7,
-  "outdoorDI": 31.7,
+  "outdoorDI": 32,
   "indoorAH": 6.8,
-  "outdoorAH": 4.1,
+  "outdoorAH": 3.6,
   "co2Level": {
     "level": "良好",
     "color": "green",
