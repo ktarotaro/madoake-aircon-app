@@ -1,25 +1,25 @@
 {
-  "id": "2026-11-24-1795435240867",
-  "targetDate": "2026-11-24",
-  "createdAt": "2026-11-23T12:00:40.867Z",
-  "notifyUntil": "2026-11-23T13:00:00.000Z",
+  "id": "2026-11-25-1795521641318",
+  "targetDate": "2026-11-25",
+  "createdAt": "2026-11-24T12:00:41.318Z",
+  "notifyUntil": "2026-11-24T13:00:00.000Z",
   "test": false,
-  "winter": false,
-  "notify": false,
-  "dateLabel": "11/24（火）",
-  "summary": "最高8℃・最低5℃",
+  "winter": true,
+  "notify": true,
+  "dateLabel": "11/25（水）",
+  "summary": "最高0℃・最低-4℃",
   "forecast": {
-    "min": 5,
-    "max": 8,
-    "reportDatetime": "2026-11-23T17:00:00+09:00"
+    "min": -4,
+    "max": 0,
+    "reportDatetime": "2026-11-24T17:00:00+09:00"
   },
   "plan": {
-    "storage": "切る〜最小",
+    "storage": "弱め",
     "morning": "7:00",
     "daytime": "在宅時に運転",
     "evening": "夕方〜就寝に運転"
   },
-  "title": "明日 最高8℃・最低5℃",
-  "body": "蓄熱は「切る〜最小」（22時までに設定）。エアコンは朝7:00タイマー、夕方〜就寝に運転。",
-  "pushSent": 0
+  "title": "明日 最高0℃・最低-4℃",
+  "body": "蓄熱は「弱め」（22時までに設定）。エアコンは朝7:00タイマー、夕方〜就寝に運転。",
+  "pushSent": 1
 }
