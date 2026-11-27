@@ -1,17 +1,17 @@
 {
-  "id": "2026-11-27-1795694441419",
-  "targetDate": "2026-11-27",
-  "createdAt": "2026-11-26T12:00:41.419Z",
-  "notifyUntil": "2026-11-26T13:00:00.000Z",
+  "id": "2026-11-28-1795780841261",
+  "targetDate": "2026-11-28",
+  "createdAt": "2026-11-27T12:00:41.261Z",
+  "notifyUntil": "2026-11-27T13:00:00.000Z",
   "test": false,
-  "winter": true,
-  "notify": true,
-  "dateLabel": "11/27（金）",
-  "summary": "最高13℃・最低1℃",
+  "winter": false,
+  "notify": false,
+  "dateLabel": "11/28（土）",
+  "summary": "最高14℃・最低9℃",
   "forecast": {
-    "min": 1,
-    "max": 13,
-    "reportDatetime": "2026-11-26T17:00:00+09:00"
+    "min": 9,
+    "max": 14,
+    "reportDatetime": "2026-11-27T17:00:00+09:00"
   },
   "plan": {
     "storage": "切る〜最小",
@@ -19,7 +19,7 @@
     "daytime": "在宅時に運転",
     "evening": "夕方〜就寝に運転"
   },
-  "title": "明日 最高13℃・最低1℃",
+  "title": "明日 最高14℃・最低9℃",
   "body": "蓄熱は「切る〜最小」（22時までに設定）。エアコンは朝7:00タイマー、夕方〜就寝に運転。",
-  "pushSent": 1
+  "pushSent": 0
 }
